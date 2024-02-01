@@ -1,8 +1,15 @@
-import React from "react";
-import LoginForm from './components/LoginForm';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import DashboardPage from './components/DashboardPage';
 
 const App = (): JSX.Element => {
-  return <h1>Corgis Are Awesome!</h1>;
+  return (
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+    </Routes>
+  );
 };
 
 export default App;

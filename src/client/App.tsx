@@ -1,7 +1,8 @@
 import React from "react";
+import LoginForm from './components/LoginForm';
 
 const App = (): JSX.Element => {
-  return <h1>TypeScript is awesome</h1>;
+  return <h1>Corgis Are Awesome!</h1>;
 };
 
 export default App;

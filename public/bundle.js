@@ -116,7 +116,7 @@ eval("\n\nif (false) {} else {\n  module.exports = __webpack_require__(/*! ./cjs
   \****************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar react_1 = __importDefault(__webpack_require__(/*! react */ \"./node_modules/react/index.js\"));\nvar App = function () {\n    return react_1.default.createElement(\"h1\", null, \"TypeScript is awesome\");\n};\nexports[\"default\"] = App;\n\n\n//# sourceURL=webpack://subtract/./src/client/App.tsx?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar react_1 = __importDefault(__webpack_require__(/*! react */ \"./node_modules/react/index.js\"));\nvar App = function () {\n    return react_1.default.createElement(\"h1\", null, \"Corgis Are Awesome!\");\n};\nexports[\"default\"] = App;\n\n\n//# sourceURL=webpack://subtract/./src/client/App.tsx?");
 
 /***/ }),
 

@@ -6,7 +6,15 @@ userRouter.post(
   '/signup',
   userController.addNewUser,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send('New User Added To Database!');
+    return res.status(200).send(res.locals.newUser);
+  }
+);
+
+userRouter.post(
+  '/login',
+  userController.login,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send(res.locals.userData);
   }
 );
 

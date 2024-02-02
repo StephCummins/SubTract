@@ -1,7 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import db from '../../server/database/db';
 
 declare module 'jwt-decode' {
   export interface JwtPayload {
@@ -23,7 +23,8 @@ interface UserProfile {
 }
 
 const LoginForm = (): JSX.Element => {
-  const responseMessage = (response: any) => {
+  const navigate = useNavigate();
+  const handleLogin = (response: any) => {
     const responseInfo = jwtDecode(response.credential);
     console.log(responseInfo);
     const user: UserProfile = {
@@ -32,9 +33,22 @@ const LoginForm = (): JSX.Element => {
       email: responseInfo.email,
       password: responseInfo.sub!,
       googleAuth: true,
-      picture: responseInfo.picture,
+      picture: responseInfo.picture
     };
     console.log(user);
+
+    fetch('/user/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+    })
+      .then((res) => {
+        console.log('In res!');
+        if (res.ok) navigate('/dashboard');
+      })
+      .catch((error) => {
+        console.log('Error logging in:', error.message);
+      });
   };
 
   return (
@@ -42,7 +56,7 @@ const LoginForm = (): JSX.Element => {
       <GoogleOAuthProvider
         clientId={process.env.REACT_APP_GOOGLE_OUATH_CLIENT_ID!}
       >
-        <GoogleLogin onSuccess={responseMessage} />
+        <GoogleLogin onSuccess={handleLogin} />
       </GoogleOAuthProvider>
     </form>
   );

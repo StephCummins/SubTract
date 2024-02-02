@@ -9,23 +9,23 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+        exclude: /node_modules/
+      }
+    ]
   },
   mode: 'development',
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js']
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'public')
   },
   plugins: [
     new Dotenv(),
     new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ }),
     new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-  ],
+      process: 'process/browser'
+    })
+  ]
 };

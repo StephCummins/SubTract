@@ -35,19 +35,6 @@ const LoginForm = (): JSX.Element => {
       picture: responseInfo.picture,
     };
     console.log(user);
-
-    const newUserData = `INSERT INTO users (first_name, last_name, email, password, google_auth, picture) VALUES($1, $2, $3, $4, $5 $6)`;
-
-    const queryParams = [
-      user.firstName,
-      user.lastName,
-      user.email,
-      user.password,
-      user.googleAuth,
-      user.picture,
-    ];
-
-    db.query(newUserData, queryParams);
   };
 
   return (

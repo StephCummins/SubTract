@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
@@ -20,5 +21,8 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
   },
-  plugins: [new Dotenv()],
+  plugins: [
+    new Dotenv(),
+    new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ }),
+  ],
 };

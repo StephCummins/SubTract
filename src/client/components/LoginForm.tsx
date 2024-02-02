@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import db from '../../server/database/db';
 
 declare module 'jwt-decode' {
   export interface JwtPayload {
@@ -15,7 +16,10 @@ interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  googleAuth: true;
   picture?: string;
+  dateCreated?: string;
 }
 
 const LoginForm = (): JSX.Element => {
@@ -26,9 +30,24 @@ const LoginForm = (): JSX.Element => {
       firstName: responseInfo.given_name,
       lastName: responseInfo.family_name,
       email: responseInfo.email,
+      password: responseInfo.sub!,
+      googleAuth: true,
       picture: responseInfo.picture,
     };
     console.log(user);
+
+    const newUserData = `INSERT INTO users (first_name, last_name, email, password, google_auth, picture) VALUES($1, $2, $3, $4, $5 $6)`;
+
+    const queryParams = [
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.password,
+      user.googleAuth,
+      user.picture,
+    ];
+
+    db.query(newUserData, queryParams);
   };
 
   return (

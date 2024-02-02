@@ -24,5 +24,8 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new webpack.IgnorePlugin({ resourceRegExp: /^pg-native$/ }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
   ],
 };

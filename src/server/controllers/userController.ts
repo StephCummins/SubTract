@@ -1,11 +1,13 @@
+import { Request, Response, NextFunction } from 'express';
 import db from '../database/db';
+import type ErrorMessage from '../models/errorInterface';
 
 interface NewUserController {
-  addNewUser(req: any, res: any, next: any): void;
+  addNewUser(req: Request, res: Response, next: NextFunction): any;
 }
 
 const userController: NewUserController = {
-  async addNewUser(req: any, res: any, next: any) {
+  async addNewUser(req, res, next) {
     try {
       const user = req.body!;
       console.log('Entered User Controller!');
@@ -26,10 +28,11 @@ const userController: NewUserController = {
       return next();
     } catch (error) {
       console.log(error);
-      return next({
+      const message: ErrorMessage = {
         log: 'Error at userController.addNewUser',
-        message: { err: 'Error adding user to database' }
-      });
+        message: { error: 'Error adding user to database' }
+      };
+      return next(message);
     }
   }
 };

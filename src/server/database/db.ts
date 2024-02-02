@@ -7,8 +7,8 @@ const pool = new pg.Pool({
 });
 
 export default {
-  query: (text: string, params: any, callback?: any) => {
+  query: async (text: string, params: any, callback?: any) => {
     console.log('In the Database!');
-    return pool.query(text, params, callback);
+    return pool.query(text, params, await callback);
   }
 };

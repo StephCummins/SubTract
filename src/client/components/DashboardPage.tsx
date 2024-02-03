@@ -1,6 +1,7 @@
 import React from 'react';
 
-const DashboardPage = (): JSX.Element => {
+const DashboardPage = ({ user, setUser }): JSX.Element => {
+  console.log('In Dashboard Page!', user);
   return <h1>Dashboard Page!</h1>;
 };
 

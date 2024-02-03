@@ -1,11 +1,11 @@
 import React from 'react';
 import LoginForm from './LoginForm';
 
-const LoginPage = (): JSX.Element => {
+const LoginPage = ({ user, setUser }): JSX.Element => {
   return (
     <div>
       <h1>Login Page!</h1>
-      <LoginForm />
+      <LoginForm user={user} setUser={setUser} />
     </div>
   );
 };

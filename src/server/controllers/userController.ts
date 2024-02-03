@@ -13,7 +13,7 @@ interface NewUserController {
 const userController: NewUserController = {
   async addNewUser(req, res, next) {
     try {
-      const user = req.body!;
+      const user = req.body;
       console.log('Entered User Controller!');
       console.log(req.body);
       console.log(res.locals.password);
@@ -88,11 +88,12 @@ const userController: NewUserController = {
   async authUser(req, res, next) {
     try {
       const { password } = req.body;
+
       const result = await bcrypt.compare(
         password,
         res.locals.userData.password
       );
-      if (result) throw new Error('Invalid login credentials!');
+      if (!result) throw new Error('Invalid login credentials!');
       else return next();
     } catch (error) {
       const message: ErrorMessage = {

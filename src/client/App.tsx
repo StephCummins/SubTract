@@ -20,7 +20,6 @@ const App = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleSetUser = (updatedUser: {}) => {
-    console.log('Invoked handleSetUser');
     const userCopy = { ...user };
 
     for (let key in updatedUser) {
@@ -48,10 +47,8 @@ const App = (): JSX.Element => {
           break;
         case 'date_created':
           userCopy.dateCreated = updatedUser[key];
-          break;
       }
     }
-    console.log('User Copy!', userCopy);
 
     setUser(userCopy);
   };
@@ -69,7 +66,7 @@ const App = (): JSX.Element => {
       const data = await response.json();
       console.log('data', data);
 
-      await setUser(data);
+      setUser(data);
 
       console.log('Successfully created account!');
       navigate('/dashboard');

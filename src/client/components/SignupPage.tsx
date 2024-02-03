@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const SignupPage = ({ user, setUser, signUp }): JSX.Element => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const navigate = useNavigate();
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,28 +15,8 @@ const SignupPage = ({ user, setUser, signUp }): JSX.Element => {
       password,
       googleAuth: false
     };
-    console.log('accountInfo', accountInfo);
 
     signUp(accountInfo);
-    // try {
-    //   const response = await fetch('/user/signup', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(accountInfo)
-    //   });
-
-    //   if (!response.ok) throw response;
-
-    //   const data = await response.json();
-    //   console.log('data', data);
-
-    //   await setUser(data);
-
-    //   console.log('user', user);
-    //   navigate('/dashboard');
-    // } catch (error) {
-    //   console.log('Error creating account:', error);
-    // }
   };
 
   return (

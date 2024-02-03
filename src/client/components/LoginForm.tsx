@@ -50,27 +50,11 @@ const LoginForm = ({ user, setUser }): JSX.Element => {
     } catch (error) {
       console.log('Error logging in:', error);
     }
-
-    // fetch('/user/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(loginInfo)
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log('data', data);
-    //     setUser(data);
-    //     console.log(user);
-    //     navigate('/dashboard');
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error logging in:', error.message);
-    //   });
   };
 
-  const handleLogin = (response: any) => {
+  const handleGoogleLogin = async (response: any) => {
     const responseInfo = jwtDecode(response.credential);
-    console.log(responseInfo);
+
     const user: UserProfile = {
       firstName: responseInfo.given_name,
       lastName: responseInfo.family_name,
@@ -79,21 +63,93 @@ const LoginForm = ({ user, setUser }): JSX.Element => {
       googleAuth: true,
       picture: responseInfo.picture
     };
-    console.log(user);
 
-    fetch('/user/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
-    })
-      .then((res) => {
-        console.log('In res!');
-        if (res.ok) navigate('/dashboard');
-      })
-      .catch((error) => {
-        console.log('Error logging in:', error.message);
-      });
+    try {
+      const response = await fetch(`/user/checkforaccount?email=${user.email}`);
+
+      if (!response.ok) throw response;
+
+      const data = await response.json();
+  
+      if (data[0]) {
+        try {
+          const response = await fetch('/user/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+          });
+    
+          if (!response.ok) throw response;
+    
+          const data = await response.json();
+    
+          await setUser(data);
+    
+          navigate('/dashboard');
+        }
+      } else {
+        try {
+          const response = await fetch('/user/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+          });
+    
+          if (!response.ok) throw response;
+    
+          const data = await response.json();
+          console.log('data', data);
+    
+          await setUser(data);
+    
+          console.log('user', user);
+          navigate('/dashboard');
+        }
+      }
+    } catch (error) {
+      console.log('Error logging in with Google Oauth', error);
+    }
+
+    // fetch('/user/signup', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(user)
+    // })
+    //   .then((res) => {
+    //     console.log('In res!');
+    //     if (res.ok) navigate('/dashboard');
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error logging in:', error.message);
+    //   });
   };
+
+  // const handleGoogleLogin = (response: any) => {
+  //   const responseInfo = jwtDecode(response.credential);
+  //   console.log(responseInfo);
+  //   const user: UserProfile = {
+  //     firstName: responseInfo.given_name,
+  //     lastName: responseInfo.family_name,
+  //     email: responseInfo.email,
+  //     password: responseInfo.sub!,
+  //     googleAuth: true,
+  //     picture: responseInfo.picture
+  //   };
+  //   console.log(user);
+
+  //   fetch('/user/signup', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(user)
+  //   })
+  //     .then((res) => {
+  //       console.log('In res!');
+  //       if (res.ok) navigate('/dashboard');
+  //     })
+  //     .catch((error) => {
+  //       console.log('Error logging in:', error.message);
+  //     });
+  // };
 
   return (
     <div>
@@ -119,10 +175,12 @@ const LoginForm = ({ user, setUser }): JSX.Element => {
       <GoogleOAuthProvider
         clientId={process.env.REACT_APP_GOOGLE_OUATH_CLIENT_ID!}
       >
-        <GoogleLogin onSuccess={handleLogin} />
+        <GoogleLogin onSuccess={handleGoogleLogin} />
       </GoogleOAuthProvider>
       <h2>Don't Have An Account?</h2>
-      <button type="button">Sign Up!</button>
+      <button type="button" onClick={() => navigate('/signup')}>
+        Sign Up!
+      </button>
     </div>
   );
 };

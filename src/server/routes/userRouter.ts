@@ -20,4 +20,12 @@ userRouter.post(
   }
 );
 
+userRouter.get(
+  '/checkforaccount',
+  userController.checkUserAccount,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send(res.locals.userAccount);
+  }
+);
+
 export default userRouter;

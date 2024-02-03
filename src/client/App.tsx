@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
 import type User from './models/userInterface';
@@ -58,6 +59,10 @@ const App = (): JSX.Element => {
       <Route
         path="/"
         element={<LoginPage user={user} setUser={handleSetUser} />}
+      />
+      <Route
+        path="/signup"
+        element={<SignupPage user={user} setUser={handleSetUser} />}
       />
       <Route
         path="/dashboard"

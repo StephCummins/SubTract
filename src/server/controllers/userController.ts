@@ -8,6 +8,7 @@ interface NewUserController {
   login(req: Request, res: Response, next: NextFunction): any;
   hashPassword(req: Request, res: Response, next: NextFunction): any;
   authUser(req: Request, res: Response, next: NextFunction): any;
+  checkUserAccount(req: Request, res: Response, next: NextFunction): any;
 }
 
 const userController: NewUserController = {
@@ -99,6 +100,25 @@ const userController: NewUserController = {
       const message: ErrorMessage = {
         log: 'Error at userController.authUser',
         message: { error: 'Error authenticating user' }
+      };
+      return next(message);
+    }
+  },
+
+  async checkUserAccount(req, res, next) {
+    try {
+      const { email } = req.query;
+      console.log('req.params', req.query);
+
+      const userData = `SELECT * FROM users WHERE email = $1`;
+      const queryParam = [email];
+      const response: any = await db.query(userData, queryParam);
+      res.locals.userAccount = response.rows;
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.checkUserAccount',
+        message: { error: 'Error checking if user account exists' }
       };
       return next(message);
     }

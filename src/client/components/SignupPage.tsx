@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SignupPage = ({ user, setUser }): JSX.Element => {
+const SignupPage = ({ user, setUser, signUp }): JSX.Element => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,25 +20,26 @@ const SignupPage = ({ user, setUser }): JSX.Element => {
     };
     console.log('accountInfo', accountInfo);
 
-    try {
-      const response = await fetch('/user/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(accountInfo)
-      });
+    signUp(accountInfo);
+    // try {
+    //   const response = await fetch('/user/signup', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(accountInfo)
+    //   });
 
-      if (!response.ok) throw response;
+    //   if (!response.ok) throw response;
 
-      const data = await response.json();
-      console.log('data', data);
+    //   const data = await response.json();
+    //   console.log('data', data);
 
-      await setUser(data);
+    //   await setUser(data);
 
-      console.log('user', user);
-      navigate('/dashboard');
-    } catch (error) {
-      console.log('Error creating account:', error);
-    }
+    //   console.log('user', user);
+    //   navigate('/dashboard');
+    // } catch (error) {
+    //   console.log('Error creating account:', error);
+    // }
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
@@ -16,6 +16,8 @@ const App = (): JSX.Element => {
     picture: null,
     dateCreated: null
   });
+
+  const navigate = useNavigate();
 
   const handleSetUser = (updatedUser: {}) => {
     console.log('Invoked handleSetUser');
@@ -54,15 +56,49 @@ const App = (): JSX.Element => {
     setUser(userCopy);
   };
 
+  const handleSignup = async (signupInfo) => {
+    try {
+      const response = await fetch('/user/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signupInfo)
+      });
+
+      if (!response.ok) throw response;
+
+      const data = await response.json();
+      console.log('data', data);
+
+      await setUser(data);
+
+      console.log('Successfully created account!');
+      navigate('/dashboard');
+    } catch (error) {
+      console.log('Error signing up for account:', error);
+    }
+  };
+
   return (
     <Routes>
       <Route
         path="/"
-        element={<LoginPage user={user} setUser={handleSetUser} />}
+        element={
+          <LoginPage
+            user={user}
+            setUser={handleSetUser}
+            signUp={handleSignup}
+          />
+        }
       />
       <Route
         path="/signup"
-        element={<SignupPage user={user} setUser={handleSetUser} />}
+        element={
+          <SignupPage
+            user={user}
+            setUser={handleSetUser}
+            signUp={handleSignup}
+          />
+        }
       />
       <Route
         path="/dashboard"

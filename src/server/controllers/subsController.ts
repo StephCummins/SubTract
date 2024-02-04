@@ -3,10 +3,33 @@ import db from '../database/db';
 import type ErrorMessage from '../models/errorInterface';
 
 interface NewSubsController {
+  getAllSubs(req: Request, res: Response, next: NextFunction): any;
   addNewSub(req: Request, res: Response, next: NextFunction): any;
 }
 
 const subsController: NewSubsController = {
+  async getAllSubs(req, res, next) {
+    try {
+      const { userId } = req.query;
+
+      const subsData = `SELECT * FROM subscriptions WHERE user_id = $1`;
+      const queryParam = [Number(userId)];
+
+      const response: any = await db.query(subsData, queryParam);
+      res.locals.allSubs = response.rows;
+      console.log(res.locals.allSubs);
+
+      return next();
+    } catch (error) {
+      console.log(error);
+      const message: ErrorMessage = {
+        log: 'Error at subsController.getAllSubs',
+        message: { error: 'Error retrieving all subscriptions' }
+      };
+      return next(message);
+    }
+  },
+
   async addNewSub(req, res, next) {
     try {
       const sub = req.body;

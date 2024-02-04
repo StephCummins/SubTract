@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import SignInSide from './components/MATERIALUI';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
@@ -78,16 +77,6 @@ const App = (): JSX.Element => {
 
   return (
     <Routes>
-      {/* <Route
-        path="/"
-        element={
-          <SignInSide
-          // user={user}
-          // setUser={handleSetUser}
-          // signUp={handleSignup}
-          />
-        }
-      /> */}
       <Route
         path="/"
         element={

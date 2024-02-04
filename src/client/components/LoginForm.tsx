@@ -50,8 +50,6 @@ const LoginForm = ({ user, setUser, signUp }): JSX.Element => {
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    //const userCredentials = { email, password };
-
     login({ email, password });
   };
 

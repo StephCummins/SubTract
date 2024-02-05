@@ -68,9 +68,11 @@ const DashboardPage = ({
             <TableRow key={subscription.subId} hover>
               <TableCell>{subscription.name}</TableCell>
               <TableCell>{subscription.monthlyFee}</TableCell>
-              <TableCell>{subscription.signupDate}</TableCell>
-              <TableCell>{subscription.freeTrial}</TableCell>
-              <TableCell>{subscription.dateFreeTrialEnds}</TableCell>
+              <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
+              <TableCell>{subscription.freeTrial ? 'True' : 'False'}</TableCell>
+              <TableCell>
+                {subscription.dateFreeTrialEnds.slice(0, 10)}
+              </TableCell>
               <TableCell>{subscription.website}</TableCell>
               <TableCell>{subscription.totalSpent}</TableCell>
               <TableCell>

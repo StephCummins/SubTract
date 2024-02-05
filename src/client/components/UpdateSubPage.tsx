@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
   const [name, setName] = useState(currentSub.name);
@@ -27,55 +28,68 @@ const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
   );
   const [totalSpent, setTotalSpent] = useState(currentSub.totalSpent);
 
+  const navigate = useNavigate();
+
   const handleSignupDate = (newValue) => {
     if (newValue) setSignupDate(newValue);
-    const updatedSub = {
-      subId: currentSub.subId,
-      userId: currentSub.userId,
-      name,
-      website,
-      signupDate,
-      monthlyFee,
-      freeTrial,
-      dateFreeTrialEnds,
-      totalSpent
-    };
-    console.log(updatedSub);
   };
 
   const handleDateChange = (newValue) => {
-    if (newValue) setDateFreeTrialEnds(newValue.M['$d']);
-    const updatedSub = {
-      subId: currentSub.subId,
-      userId: currentSub.userId,
-      name,
-      website,
-      signupDate,
-      monthlyFee,
-      freeTrial,
-      dateFreeTrialEnds,
-      totalSpent
-    };
-    console.log(updatedSub);
+    if (newValue) setDateFreeTrialEnds(newValue);
   };
 
-  const handleSubmit = () => {
+  const handleFreeTrialChange = (e) => {
+    const bool = e.target.value;
+    console.log(bool);
+    setFreeTrial(bool);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const updatedSub = {
       subId: currentSub.subId,
       userId: currentSub.userId,
       name,
       website,
       signupDate,
-      monthlyFee,
+      monthlyFee: parseInt(monthlyFee),
       freeTrial,
       dateFreeTrialEnds,
-      totalSpent
+      totalSpent: parseInt(totalSpent)
     };
-    console.log(updatedSub);
+
+    setCurrentSub(updatedSub);
+
+    try {
+      console.log('updatedSub:', updatedSub);
+      const response = await fetch('/subs/editsub', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSub)
+      });
+
+      if (!response.ok) throw response;
+
+      setCurrentSub({
+        subId: null,
+        userId: null,
+        name: '',
+        website: '',
+        signupDate: '',
+        monthlyFee: null,
+        freeTrial: false,
+        dateFreeTrialEnds: '',
+        totalSpent: null
+      });
+
+      navigate('/dashboard');
+    } catch (error) {
+      console.log('Error updating subscription!');
+    }
   };
 
   const defaultTheme = createTheme();
-  console.log(signupDate);
+  // console.log(signupDate);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -129,15 +143,16 @@ const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
               label="Signup Date"
               defaultValue={dayjs(signupDate)}
               value={dayjs(signupDate)}
-              onChange={(newValue) => handleSignupDate(newValue)}
+              onChange={(newValue) => handleSignupDate(newValue?.toString())}
             />
           </LocalizationProvider>
           <TextField
             id="freeTrial"
             select
             label="Free Trial"
-            defaultValue={freeTrial}
-            helperText="Please select your currency"
+            value={freeTrial}
+            //defaultValue={freeTrial ? freeTrial : false}
+            onChange={handleFreeTrialChange}
           >
             <MenuItem value={true as any}>True</MenuItem>
             <MenuItem value={false as any}>False</MenuItem>
@@ -145,9 +160,9 @@ const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Date Free Trial Ends"
-              defaultValue={dayjs(dateFreeTrialEnds) || null}
+              defaultValue={dayjs(dateFreeTrialEnds)}
               value={dayjs(signupDate)}
-              onChange={(newValue) => handleDateChange(newValue)}
+              onChange={(newValue) => handleDateChange(newValue?.toString())}
             />
           </LocalizationProvider>
           <TextField

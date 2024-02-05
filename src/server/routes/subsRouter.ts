@@ -23,7 +23,7 @@ subsRouter.patch(
   '/editsub',
   subsController.editSub,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send(res.locals.updatedSub);
+    return res.status(200).send('Subscription successfully updated!');
   }
 );
 

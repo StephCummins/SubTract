@@ -68,6 +68,8 @@ const subsController: NewSubsController = {
   async editSub(req, res, next) {
     try {
       const updatedSub = req.body;
+      console.log('In the server! editSub controller');
+      console.log(updatedSub);
 
       const updatedSubData = `UPDATE subscriptions SET name = $1, website = $2, signup_date = $3, monthly_fee = $4, free_trial = $5, date_free_trial_ends = $6, total_spent = $7 WHERE subscription_id = $8`;
 
@@ -81,6 +83,8 @@ const subsController: NewSubsController = {
         updatedSub.totalSpent,
         updatedSub.subId
       ];
+
+      await db.query(updatedSubData, queryParams);
 
       return next();
     } catch (error) {

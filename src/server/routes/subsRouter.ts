@@ -5,8 +5,9 @@ const subsRouter: Router = express.Router();
 subsRouter.get(
   '/retrieveallsubs',
   subsController.getAllSubs,
+  subsController.formatSubs,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send(res.locals.allSubs);
+    return res.status(200).send(res.locals.formattedSubs);
   }
 );
 
@@ -15,6 +16,14 @@ subsRouter.post(
   subsController.addNewSub,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.newSub);
+  }
+);
+
+subsRouter.patch(
+  '/editsub',
+  subsController.editSub,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send(res.locals.updatedSub);
   }
 );
 

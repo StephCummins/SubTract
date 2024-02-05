@@ -3,7 +3,9 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
+import UpdateSubPage from './components/UpdateSubPage';
 import type User from './models/userInterface';
+import type Subscription from './models/subscriptionInterface';
 
 const App = (): JSX.Element => {
   const [user, setUser] = useState<User>({
@@ -15,6 +17,18 @@ const App = (): JSX.Element => {
     googleAuth: null,
     picture: null,
     dateCreated: null
+  });
+
+  const [currentSub, setCurrentSub] = useState<Subscription>({
+    subId: null,
+    userId: null,
+    name: '',
+    website: '',
+    signupDate: '',
+    monthlyFee: null,
+    freeTrial: false,
+    dateFreeTrialEnds: '',
+    totalSpent: null
   });
 
   const navigate = useNavigate();
@@ -99,7 +113,24 @@ const App = (): JSX.Element => {
       />
       <Route
         path="/dashboard"
-        element={<DashboardPage user={user} setUser={setUser} />}
+        element={
+          <DashboardPage
+            user={user}
+            setUser={setUser}
+            currentSub={currentSub}
+            setCurrentSub={setCurrentSub}
+          />
+        }
+      />
+
+      <Route
+        path="/update"
+        element={
+          <UpdateSubPage
+            currentSub={currentSub}
+            setCurrentSub={setCurrentSub}
+          />
+        }
       />
     </Routes>
   );

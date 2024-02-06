@@ -40,6 +40,21 @@ const DashboardPage = ({
     navigate('/update');
   };
 
+  const handleDelete = async (subId: number) => {
+    try {
+      const response = await fetch('/subs/deletesub', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subId })
+      });
+      if (!response.ok) throw response;
+      const newSubs = subs.filter((sub: Subscription) => sub.subId !== subId);
+      setSubs(newSubs);
+    } catch (error) {
+      console.log('Error deleting subscription');
+    }
+  };
+
   useEffect(() => {
     getSubscriptions();
   }, []);
@@ -49,6 +64,14 @@ const DashboardPage = ({
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Subscriptions
       </Typography>
+      <Button
+        type="button"
+        onClick={() => navigate('/add')}
+        variant="contained"
+        sx={{ mt: 1, mb: 1 }}
+      >
+        Add New Subscription
+      </Button>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -88,7 +111,7 @@ const DashboardPage = ({
               <TableCell>
                 <Button
                   type="submit"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => handleDelete(subscription.subId)}
                   variant="contained"
                   sx={{ mt: 1, mb: 1 }}
                 >

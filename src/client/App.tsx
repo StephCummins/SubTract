@@ -4,6 +4,7 @@ import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
 import UpdateSubPage from './components/UpdateSubPage';
+import AddNewSubPage from './components/AddNewSubPage';
 import type User from './models/userInterface';
 import type Subscription from './models/subscriptionInterface';
 
@@ -122,7 +123,6 @@ const App = (): JSX.Element => {
           />
         }
       />
-
       <Route
         path="/update"
         element={
@@ -132,6 +132,7 @@ const App = (): JSX.Element => {
           />
         }
       />
+      <Route path="/add" element={<AddNewSubPage user={user} />} />
     </Routes>
   );
 };

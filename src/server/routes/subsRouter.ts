@@ -27,4 +27,12 @@ subsRouter.patch(
   }
 );
 
+subsRouter.delete(
+  '/deletesub',
+  subsController.deleteSub,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send('Subscription deleted');
+  }
+);
+
 export default subsRouter;

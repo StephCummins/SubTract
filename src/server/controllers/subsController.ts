@@ -7,6 +7,7 @@ interface NewSubsController {
   getAllSubs(req: Request, res: Response, next: NextFunction): any;
   addNewSub(req: Request, res: Response, next: NextFunction): any;
   editSub(req: Request, res: Response, next: NextFunction): any;
+  deleteSub(req: Request, res: Response, next: NextFunction): any;
   formatSubs(req: Request, res: Response, next: NextFunction): any;
 }
 
@@ -39,7 +40,7 @@ const subsController: NewSubsController = {
       console.log('Entered Subs Controller!');
       console.log(req.body);
 
-      const newSubData = `INSERT INTO subscriptions (user_id, name, website, signup_date, monthly_fee, free_trial, date_free_trial_ends) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+      const newSubData = `INSERT INTO subscriptions (user_id, name, website, signup_date, monthly_fee, free_trial, date_free_trial_ends, total_spent) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
 
       const queryParams = [
         sub.userId,
@@ -48,7 +49,8 @@ const subsController: NewSubsController = {
         sub.signupDate,
         sub.monthlyFee,
         sub.freeTrial,
-        sub.dateFreeTrialEnds
+        sub.dateFreeTrialEnds,
+        sub.totalSpent
       ];
 
       const response: any = await db.query(newSubData, queryParams);
@@ -97,6 +99,25 @@ const subsController: NewSubsController = {
     }
   },
 
+  async deleteSub(req, res, next) {
+    try {
+      const { subId } = req.body;
+
+      const subDelete = `DELETE FROM subscriptions WHERE subscription_id = $1`;
+      const queryParams = [subId];
+      await db.query(subDelete, queryParams);
+
+      return next();
+    } catch (error) {
+      console.log(error);
+      const message: ErrorMessage = {
+        log: 'Error at subsController.deleteSub',
+        message: { error: 'Error deleting subscription' }
+      };
+      return next(message);
+    }
+  },
+
   async formatSubs(req, res, next) {
     try {
       if (res.locals.allSubs[0]) {
@@ -111,7 +132,7 @@ const subsController: NewSubsController = {
               monthlyFee: subscription.monthly_fee,
               freeTrial: subscription.free_trial,
               dateFreeTrialEnds: subscription.date_free_trial_ends,
-              totalSpent: 0
+              totalSpent: subscription.total_spent
             };
           }
         );

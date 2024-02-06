@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import MenuBar from './MenuBar';
 
 const addNewSubPage = ({ user }): JSX.Element => {
   const [name, setName] = useState('');
@@ -72,6 +73,7 @@ const addNewSubPage = ({ user }): JSX.Element => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <MenuBar user={user} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{

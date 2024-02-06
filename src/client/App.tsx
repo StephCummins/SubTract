@@ -129,6 +129,7 @@ const App = (): JSX.Element => {
           <UpdateSubPage
             currentSub={currentSub}
             setCurrentSub={setCurrentSub}
+            user={user}
           />
         }
       />

@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import type Subscription from '../models/subscriptionInterface';
+import MenuBar from './MenuBar';
 
 const DashboardPage = ({
   user,
@@ -61,6 +62,7 @@ const DashboardPage = ({
 
   return (
     <React.Fragment>
+      <MenuBar user={user} />
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         Subscriptions
       </Typography>

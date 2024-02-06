@@ -14,8 +14,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuBar from './MenuBar';
 
-const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
+const UpdateSubPage = ({ currentSub, setCurrentSub, user }): JSX.Element => {
   const [name, setName] = useState(currentSub.name);
   const [website, setWebsite] = useState(currentSub.website);
   const [signupDate, setSignupDate] = useState(
@@ -93,6 +94,7 @@ const UpdateSubPage = ({ currentSub, setCurrentSub }): JSX.Element => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <MenuBar user={user} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{

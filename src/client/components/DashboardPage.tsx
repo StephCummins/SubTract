@@ -53,7 +53,7 @@ const DashboardPage = ({
       datasets: [
         {
           data: [],
-          backgroundColor: ['#2d00f7', '#8900f2', '#d100d1', '#f20089']
+          backgroundColor: ['#05299E', '#06BEE1', '#FF7409', '#2DD881']
         }
       ]
     };

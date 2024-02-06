@@ -26,7 +26,7 @@ const MenuBar = ({ user }) => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#05299E' }}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters

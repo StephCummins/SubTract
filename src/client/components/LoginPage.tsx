@@ -99,14 +99,10 @@ const LoginPage = ({ user, setUser, signUp }): JSX.Element => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundImage: `url(${require('../../../public/assets/SubTract_Main.png')})`,
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light'
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: 'cover',
+            backgroundColor: '#05299E',
+            backgroundSize: '1000px',
             backgroundPosition: 'center'
           }}
         />
@@ -120,9 +116,21 @@ const LoginPage = ({ user, setUser, signUp }): JSX.Element => {
               alignItems: 'center'
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar
+              sx={{
+                m: 1,
+                bgcolor: '#FF7409',
+                display: { xs: 'none', sm: 'flex' }
+              }}
+            >
               <LockOutlinedIcon />
             </Avatar>
+            <Box sx={{ m: 1, display: { xs: 'flex', sm: 'none' } }}>
+              <img
+                width="300px"
+                src={require('../../../public/assets/SubTract_Logo_Blue.png')}
+              />
+            </Box>
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>

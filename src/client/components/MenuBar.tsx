@@ -68,13 +68,11 @@ const MenuBar = ({ user }) => {
             alignItems="center"
             sx={{
               display: { xs: 'flex', md: 'none' }
-              // justify: 'center',
-              // alignItems: 'center'
             }}
           >
             <img
               src={require('../../../public/assets/SubTract_Logo.png')}
-              height="50px"
+              height="40px"
             />
           </Box>
           <Box sx={{ flexGrow: 0 }}>

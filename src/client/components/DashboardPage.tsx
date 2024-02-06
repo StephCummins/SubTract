@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import type Subscription from '../models/subscriptionInterface';
+import Grid from '@mui/material/Grid';
 import MenuBar from './MenuBar';
+import SubscriptionTable from './SubscriptionTable';
+import PieChart from './PieChart';
+import type Subscription from '../models/subscriptionInterface';
+
+interface Datasets {
+  data: number[];
+  backgroundColor: string[];
+}
+
+interface Chart {
+  labels: string[];
+  datasets: Datasets[];
+}
 
 const DashboardPage = ({
   user,
@@ -17,8 +22,15 @@ const DashboardPage = ({
   setCurrentSub
 }): JSX.Element => {
   const [subs, setSubs] = useState([]);
-
-  const navigate = useNavigate();
+  const [pieChartData, setPieChartData] = useState<Chart>({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#2d00f7', '#8900f2', '#d100d1', '#f20089']
+      }
+    ]
+  });
 
   const getSubscriptions = async () => {
     try {
@@ -28,103 +40,62 @@ const DashboardPage = ({
       if (!response.ok) throw response;
       const data = await response.json();
       if (data[0]) setSubs(data);
+      console.log('GOT ALL SUBS!!!');
+      return data;
     } catch (error) {
       console.log('Error retrieving all user subscriptions');
     }
   };
 
-  const handleEdit = (subId: number) => {
-    const current: Subscription = subs.filter(
-      (sub: Subscription) => sub.subId === subId
-    )[0];
-    setCurrentSub(current);
-    navigate('/update');
+  const generatePieChartData = (subInfo: Subscription[]) => {
+    const updatedPieChart: Chart = {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: ['#2d00f7', '#8900f2', '#d100d1', '#f20089']
+        }
+      ]
+    };
+
+    subInfo.forEach((subscription: Subscription) => {
+      const label = `${subscription.name} $${subscription.monthlyFee}`;
+      updatedPieChart.labels.push(label);
+      updatedPieChart.datasets[0].data.push(subscription.monthlyFee!);
+    });
+
+    setPieChartData(updatedPieChart);
   };
 
-  const handleDelete = async (subId: number) => {
-    try {
-      const response = await fetch('/subs/deletesub', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subId })
-      });
-      if (!response.ok) throw response;
-      const newSubs = subs.filter((sub: Subscription) => sub.subId !== subId);
-      setSubs(newSubs);
-    } catch (error) {
-      console.log('Error deleting subscription');
-    }
+  const loadPage = async () => {
+    const data = await getSubscriptions();
+    generatePieChartData(data);
   };
 
   useEffect(() => {
-    getSubscriptions();
+    loadPage();
   }, []);
 
   return (
-    <React.Fragment>
+    <main>
       <MenuBar user={user} />
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
-        Subscriptions
-      </Typography>
-      <Button
-        type="button"
-        onClick={() => navigate('/add')}
-        variant="contained"
-        sx={{ mt: 1, mb: 1 }}
-      >
-        Add New Subscription
-      </Button>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Subscription</TableCell>
-            <TableCell>Monthly Fee</TableCell>
-            <TableCell>Start Date</TableCell>
-            <TableCell>Free Trial</TableCell>
-            <TableCell>End Date</TableCell>
-            <TableCell>Website</TableCell>
-            <TableCell>Total Spent</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {subs.map((subscription: any) => (
-            <TableRow key={subscription.subId} hover>
-              <TableCell>{subscription.name}</TableCell>
-              <TableCell>{subscription.monthlyFee}</TableCell>
-              <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
-              <TableCell>{subscription.freeTrial ? 'True' : 'False'}</TableCell>
-              <TableCell>
-                {subscription.dateFreeTrialEnds.slice(0, 10)}
-              </TableCell>
-              <TableCell>{subscription.website}</TableCell>
-              <TableCell>{subscription.totalSpent}</TableCell>
-              <TableCell>
-                <Button
-                  type="submit"
-                  onClick={() => handleEdit(subscription.subId)}
-                  variant="contained"
-                  sx={{ mt: 1, mb: 1 }}
-                >
-                  Edit
-                </Button>
-              </TableCell>
-              <TableCell>
-                <Button
-                  type="submit"
-                  onClick={() => handleDelete(subscription.subId)}
-                  variant="contained"
-                  sx={{ mt: 1, mb: 1 }}
-                >
-                  Delete
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </React.Fragment>
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
+          <SubscriptionTable
+            user={user}
+            setUser={setUser}
+            currentSub={currentSub}
+            setCurrentSub={setCurrentSub}
+            getSubscriptions={getSubscriptions}
+            subs={subs}
+            setSubs={setSubs}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <PieChart pieChartData={pieChartData} />
+        </Grid>
+      </Grid>
+    </main>
   );
 };
 

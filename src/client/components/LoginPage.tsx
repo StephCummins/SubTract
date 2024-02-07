@@ -16,6 +16,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './MaterialUITheme';
+import OrangeButton from './OrangeButton';
 import type GoogleProfile from '../models/GoogleProfile';
 
 declare module 'jwt-decode' {
@@ -86,108 +89,124 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
     }
   };
 
+  const handleOnClick = () => {
+    navigate('/signup');
+  };
+
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: `url(${require('../../../public/assets/SubTract_Main.png')})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundColor: '#05299e',
-          backgroundSize: '100%',
-          backgroundPosition: 'center'
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            my: 20,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
+            backgroundImage: `url(${require('../../../public/assets/SubTract_Main.png')})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: 'primary.main',
+            backgroundSize: '100%',
+            backgroundPosition: 'center'
           }}
-        >
-          <Avatar
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
             sx={{
-              m: 1,
-              bgcolor: '#FF4F00',
-              display: { xs: 'none', sm: 'flex' }
+              my: 20,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
             }}
           >
-            <LockOutlinedIcon />
-          </Avatar>
-          <Box sx={{ m: 1, display: { xs: 'flex', sm: 'none' } }}>
-            <img
-              width="300px"
-              src={require('../../../public/assets/SubTract_Logo_Blue.png')}
-            />
-          </Box>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleFormLogin}
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: '#05299E' }}
+            <Avatar
+              sx={{
+                m: 1,
+                bgcolor: 'secondary.main',
+                display: { xs: 'none', sm: 'flex' }
+              }}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Box sx={{ m: 1, display: { xs: 'flex', sm: 'none' } }}>
+              <img
+                width="300px"
+                src={require('../../../public/assets/SubTract_Logo_Blue.png')}
+              />
+            </Box>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleFormLogin}
+              sx={{ width: '80%', mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: 'primary.main',
+                  '&:active': {
+                    transform: 'translateY(4px)'
+                  }
+                }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                {loginError && (
+                  <Grid item sx={{ alignItems: 'left' }}>
+                    <Typography sx={{ color: 'red' }}>
+                      <strong>Incorrect Login Credentials!</strong>
+                    </Typography>
+                  </Grid>
+                )}
+                {googleError && (
+                  <Grid item sx={{ alignItems: 'left' }}>
+                    <Typography sx={{ color: 'red' }}>
+                      <strong>Google Error Logging In!</strong>
+                    </Typography>
+                  </Grid>
+                )}
               </Grid>
-              {loginError && (
-                <Grid item sx={{ alignItems: 'left' }}>
-                  <Typography sx={{ color: 'red' }}>
-                    <strong>Incorrect Login Credentials!</strong>
-                  </Typography>
-                </Grid>
-              )}
-              {googleError && (
-                <Grid item sx={{ alignItems: 'left' }}>
-                  <Typography sx={{ color: 'red' }}>
-                    <strong>Google Error Logging In!</strong>
-                  </Typography>
-                </Grid>
-              )}
-            </Grid>
+            </Box>
             <Box
               sx={{
+                width: '80%',
+                // px: 8,
+                // py: 3,
                 mt: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -196,7 +215,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
               }}
             >
               <hr />
-              <Typography component="h2" variant="h6" sx={{ mt: 2, mb: 1 }}>
+              <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
                 Sign In With Google
               </Typography>
               <GoogleOAuthProvider
@@ -205,22 +224,15 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
                 <GoogleLogin onSuccess={handleGoogleLogin} />
               </GoogleOAuthProvider>
               <hr />
-              <Typography component="h2" variant="h6" sx={{ mt: 1 }}>
+              <Typography variant="h5" sx={{ mt: 1 }}>
                 Don't Have An Account?
               </Typography>
-              <Button
-                type="submit"
-                onClick={() => navigate('/signup')}
-                variant="contained"
-                sx={{ mt: 1, mb: 5, bgcolor: '#FF4F00', width: '225px' }}
-              >
-                Sign Up!
-              </Button>
+              <OrangeButton handleOnClick={handleOnClick}>Sign Up</OrangeButton>
             </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </ThemeProvider>
   );
 };
 

@@ -7,6 +7,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './MaterialUITheme';
 
 const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
   const [firstName, setFirstName] = useState('');
@@ -32,109 +34,111 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
     setPassword('');
   };
   return (
-    <Container component="main" maxWidth="xs">
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-      >
-        <Box sx={{ m: 1 }}>
-          <img
-            width="300px"
-            src={require('../../../public/assets/SubTract_Logo_Blue.png')}
-          />
-        </Box>
-        <Typography component="h1" variant="h5">
-          Create Account
-        </Typography>
+      <Container component="main" maxWidth="xs">
         <Box
-          component="form"
-          noValidate
-          onSubmit={handleFormSubmit}
-          sx={{ mt: 3 }}
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
         >
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, backgroundColor: '#FF4F00' }}
+          <Box sx={{ m: 1 }}>
+            <img
+              width="300px"
+              src={require('../../../public/assets/SubTract_Logo_Blue.png')}
+            />
+          </Box>
+          <Typography component="h1" variant="h5">
+            Create Account
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleFormSubmit}
+            sx={{ mt: 3 }}
           >
-            Sign Up!
-          </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href="/" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-            {duplicateUser && (
-              <Grid item sx={{ alignItems: 'left' }}>
-                <Typography sx={{ color: 'red' }}>
-                  <strong>
-                    An account with that email address already exists
-                  </strong>
-                </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
               </Grid>
-            )}
-          </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2, backgroundColor: '#FF4F00' }}
+            >
+              Sign Up!
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+              {duplicateUser && (
+                <Grid item sx={{ alignItems: 'left' }}>
+                  <Typography sx={{ color: 'red' }}>
+                    <strong>
+                      An account with that email address already exists
+                    </strong>
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </ThemeProvider>
   );
 };
 

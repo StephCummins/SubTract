@@ -5,35 +5,16 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './MaterialUITheme';
+import OrangeButton from './OrangeButton';
 import type Subscription from '../models/subscriptionInterface';
 
-const SubscriptionTable = ({
-  user,
-  setUser,
-  currentSub,
-  setCurrentSub,
-  getSubscriptions,
-  subs,
-  setSubs
-}): JSX.Element => {
-  // const [subs, setSubs] = useState([]);
-
+const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
   const navigate = useNavigate();
-
-  // const getSubscriptions = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `/subs/retrieveallsubs?userId=${user.userId}`
-  //     );
-  //     if (!response.ok) throw response;
-  //     const data = await response.json();
-  //     if (data[0]) setSubs(data);
-  //   } catch (error) {
-  //     console.log('Error retrieving all user subscriptions');
-  //   }
-  // };
 
   const handleEdit = (subId: number) => {
     const current: Subscription = subs.filter(
@@ -58,23 +39,34 @@ const SubscriptionTable = ({
     }
   };
 
-  // useEffect(() => {
-  //   getSubscriptions();
-  // }, []);
-
   return (
-    <React.Fragment>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Typography variant="h1" color="primary" gutterBottom>
         Subscription Dashboard
       </Typography>
-      <Button
+      <OrangeButton handleOnClick={() => navigate('/add')}>
+        Add New Subscription
+      </OrangeButton>
+      {/* <Button
         type="button"
         onClick={() => navigate('/add')}
         variant="contained"
-        sx={{ mt: 1, mb: 1 }}
+        sx={{
+          mt: 1,
+          mb: 1,
+          bgcolor: 'secondary.main',
+          '&:active': {
+            transform: 'translateY(4px)',
+            bgcolor: 'secondary.main'
+          },
+          '&:hover': {
+            bgcolor: 'secondary.dark'
+          }
+        }}
       >
         Add New Subscription
-      </Button>
+      </Button> */}
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -125,7 +117,7 @@ const SubscriptionTable = ({
           ))}
         </TableBody>
       </Table>
-    </React.Fragment>
+    </ThemeProvider>
   );
 };
 

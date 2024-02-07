@@ -39,7 +39,7 @@ const MenuBar = ({ user }) => {
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#05299E' }}>
-      <Container maxWidth={false} disableGutters sx={{ mx: '20px' }}>
+      <Container maxWidth={false} disableGutters sx={{ mx: '40px' }}>
         <Toolbar
           disableGutters
           sx={{
@@ -88,14 +88,27 @@ const MenuBar = ({ user }) => {
               height="40px"
             />
           </Box>
-          <Box sx={{ flexGrow: 0, pr: '40px' }}>
+          <Box sx={{ flexGrow: 0, pr: '80px' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {user.picture ? (
                   <Avatar alt="" src={user.picture} />
+                ) : user.firstName ? (
+                  <Avatar {...stringAvatar(user.firstName, user.lastName)} />
+                ) : (
+                  <Avatar alt="" src="/broken-image.jpg" />
+                )}
+                {/* ||
+                  (user.firstName === '' && (
+                    <Avatar alt="" src="/broken-image.jpg" />
+                  )) || (
+                    <Avatar {...stringAvatar(user.firstName, user.lastName)} />
+                  )} */}
+                {/* {user.picture ? (
+                  <Avatar alt="" src={user.picture} />
                 ) : (
                   <Avatar {...stringAvatar(user.firstName, user.lastName)} />
-                )}
+                )} */}
               </IconButton>
             </Tooltip>
             <Menu

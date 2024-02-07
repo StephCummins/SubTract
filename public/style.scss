@@ -1,18 +1,29 @@
-Button:hover,
-Button:active {
-  box-shadow: 'none';
-  background-color: darken($color, 20%);
-}
-// '&:hover': {
-//   backgroundColor: '#0069d9',
-//   borderColor: '#0062cc',
-//   boxShadow: 'none',
-// },
-// '&:active': {
-//   boxShadow: 'none',
-//   backgroundColor: '#0062cc',
-//   borderColor: '#005cbf',
-// },
-// '&:focus': {
-//   boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-// },
+// $header-font: 'Bebas Neue', sans-serif;
+// $body-font: 'Poppins', 'Open Sans', sans-serif;
+
+// $primary-blue: '#05299E';
+// $light-blue: '#06BEE1';
+// $dark-blue: '#0D2C54';
+// $primary-orange: '#FF4F00';
+// $light-orange: '#FF7409';
+// $dark-orange: '#D14101';
+// $green: #2dd881;
+
+// body {
+//   font-family: $body-font;
+// }
+
+// h1 {
+//   font-family: $header-font;
+//   color: $primary-blue;
+// }
+
+// // h1,
+// // h2,
+// // h3,
+// // h4,
+// // h5,
+// // h6 {
+// //   font-family: $header-font;
+// //   color: $primary-blue;
+// // }

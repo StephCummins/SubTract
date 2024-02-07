@@ -27,7 +27,7 @@ const DashboardPage = ({
     datasets: [
       {
         data: [],
-        backgroundColor: ['#2d00f7', '#8900f2', '#d100d1', '#f20089']
+        backgroundColor: []
       }
     ]
   });
@@ -79,19 +79,25 @@ const DashboardPage = ({
   return (
     <main>
       <MenuBar user={user} />
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
+      <Grid
+        container
+        // spacing={2}
+        sx={{
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'center',
+          alignItems: 'center',
+          my: 5,
+          mx: 5
+        }}
+      >
+        <Grid item xs={12} md={8}>
           <SubscriptionTable
-            user={user}
-            setUser={setUser}
-            currentSub={currentSub}
             setCurrentSub={setCurrentSub}
-            getSubscriptions={getSubscriptions}
             subs={subs}
             setSubs={setSubs}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <PieChart pieChartData={pieChartData} />
         </Grid>
       </Grid>

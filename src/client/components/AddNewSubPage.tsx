@@ -49,7 +49,8 @@ const addNewSubPage = ({ user }): JSX.Element => {
       signupDate,
       monthlyFee: parseInt(monthlyFee),
       freeTrial,
-      dateFreeTrialEnds,
+      dateFreeTrialEnds:
+        dateFreeTrialEnds === '' ? signupDate : dateFreeTrialEnds,
       totalSpent: parseInt(totalSpent)
     };
 

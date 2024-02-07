@@ -15,9 +15,9 @@ const userController: NewUserController = {
   async addNewUser(req, res, next) {
     try {
       const user = req.body;
-      console.log('Entered User Controller!');
-      console.log(req.body);
-      console.log(res.locals.password);
+      // console.log('Entered User Controller!');
+      // console.log(req.body);
+      // console.log(res.locals.password);
 
       const newUserData = `INSERT INTO users (first_name, last_name, email, password, google_auth, picture) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`;
 
@@ -34,7 +34,7 @@ const userController: NewUserController = {
       res.locals.newUser = response.rows[0];
       return next();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       const message: ErrorMessage = {
         log: 'Error at userController.addNewUser',
         message: { error: 'Error adding user to database' }

@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 const settings = ['Profile', 'Account', 'Logout'];
 
 const MenuBar = ({ user }) => {
+  console.log(user);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -25,12 +26,24 @@ const MenuBar = ({ user }) => {
     setAnchorElUser(null);
   };
 
+  function stringAvatar(first: string, last: string) {
+    console.log('IN THE FUNCTION!!!!');
+    return {
+      sx: {
+        color: 'black',
+        bgcolor: '#2DD881'
+      },
+      children: `${first[0]}${last[0]}`
+    };
+  }
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#05299E' }}>
-      <Container maxWidth="xl">
+      <Container maxWidth={false} disableGutters sx={{ mx: '20px' }}>
         <Toolbar
           disableGutters
           sx={{
+            width: '100%',
             display: {
               md: 'flex',
               flexDirection: 'row',
@@ -75,10 +88,14 @@ const MenuBar = ({ user }) => {
               height="40px"
             />
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, pr: '40px' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="" src={user.picture || '/broken-image.jpg'} />
+                {user.picture ? (
+                  <Avatar alt="" src={user.picture} />
+                ) : (
+                  <Avatar {...stringAvatar(user.firstName, user.lastName)} />
+                )}
               </IconButton>
             </Tooltip>
             <Menu

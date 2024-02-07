@@ -58,7 +58,7 @@ const MenuBar = ({ user }) => {
                 textDecoration: 'none'
               }}
             >
-              Hello {user.firstName}
+              {user.firstName ? `Hello ${user.firstName}` : 'Hi There!'}
             </Typography>
           </Box>
 

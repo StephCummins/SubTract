@@ -32,6 +32,8 @@ const App = (): JSX.Element => {
     totalSpent: null
   });
 
+  const [duplicateUser, setDuplicateUser] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSetUser = (updatedUser: {}) => {
@@ -68,7 +70,8 @@ const App = (): JSX.Element => {
     setUser(userCopy);
   };
 
-  const handleSignup = async (signupInfo) => {
+  const handleSignup = async (signupInfo: User) => {
+    setDuplicateUser(false);
     try {
       const response = await fetch('/user/signup', {
         method: 'POST',
@@ -79,13 +82,13 @@ const App = (): JSX.Element => {
       if (!response.ok) throw response;
 
       const data = await response.json();
-      console.log('data', data);
 
       setUser(data);
 
       console.log('Successfully created account!');
       navigate('/dashboard');
     } catch (error) {
+      setDuplicateUser(true);
       console.log('Error signing up for account:', error);
     }
   };
@@ -99,11 +102,7 @@ const App = (): JSX.Element => {
       <Route
         path="/signup"
         element={
-          <SignupPage
-            user={user}
-            setUser={handleSetUser}
-            signUp={handleSignup}
-          />
+          <SignupPage signUp={handleSignup} duplicateUser={duplicateUser} />
         }
       />
       <Route

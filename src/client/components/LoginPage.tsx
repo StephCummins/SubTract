@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import {
+  GoogleOAuthProvider,
+  GoogleLogin,
+  CredentialResponse
+} from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -26,10 +30,13 @@ declare module 'jwt-decode' {
 const LoginPage = ({ setUser, signUp }): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(false);
+  const [googleError, setGoogleError] = useState(false);
 
   const navigate = useNavigate();
 
   const login = async (loginInfo: { email: string; password: string }) => {
+    setLoginError(false);
     try {
       const response = await fetch('/user/login', {
         method: 'POST',
@@ -42,20 +49,22 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
       const data = await response.json();
 
       await setUser(data);
-      console.log('Successfully logged in!');
       navigate('/dashboard');
     } catch (error) {
-      console.log('Error logging in:', error);
+      setLoginError(true);
     }
   };
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     login({ email, password });
+    setEmail('');
+    setPassword('');
   };
 
-  const handleGoogleLogin = async (response: any) => {
-    const responseInfo = jwtDecode(response.credential);
+  const handleGoogleLogin = async (response: CredentialResponse) => {
+    setGoogleError(false);
+    const responseInfo = jwtDecode(response.credential!);
 
     const user: GoogleProfile = {
       firstName: responseInfo.given_name,
@@ -73,7 +82,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
       if (data[0]) login(user);
       else signUp(user);
     } catch (error) {
-      console.log('Error logging in with Google Oauth', error);
+      setGoogleError(true);
     }
   };
 
@@ -162,6 +171,20 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
                   Forgot password?
                 </Link>
               </Grid>
+              {loginError && (
+                <Grid item sx={{ alignItems: 'left' }}>
+                  <Typography sx={{ color: 'red' }}>
+                    <strong>Incorrect Login Credentials!</strong>
+                  </Typography>
+                </Grid>
+              )}
+              {googleError && (
+                <Grid item sx={{ alignItems: 'left' }}>
+                  <Typography sx={{ color: 'red' }}>
+                    <strong>Google Error Logging In!</strong>
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
             <Box
               sx={{
@@ -173,7 +196,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
               }}
             >
               <hr />
-              <Typography component="h2" variant="h6" sx={{ mb: 1 }}>
+              <Typography component="h2" variant="h6" sx={{ mt: 2, mb: 1 }}>
                 Sign In With Google
               </Typography>
               <GoogleOAuthProvider
@@ -182,14 +205,14 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
                 <GoogleLogin onSuccess={handleGoogleLogin} />
               </GoogleOAuthProvider>
               <hr />
-              <Typography component="h2" variant="h6">
+              <Typography component="h2" variant="h6" sx={{ mt: 1 }}>
                 Don't Have An Account?
               </Typography>
               <Button
                 type="submit"
                 onClick={() => navigate('/signup')}
                 variant="contained"
-                sx={{ mt: 1, mb: 5, bgcolor: '#FF4F00' }}
+                sx={{ mt: 1, mb: 5, bgcolor: '#FF4F00', width: '225px' }}
               >
                 Sign Up!
               </Button>

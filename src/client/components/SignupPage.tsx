@@ -135,7 +135,7 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
                 }
               }}
             >
-              Sign Up!
+              Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>

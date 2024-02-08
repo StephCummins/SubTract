@@ -24,7 +24,7 @@ const userController: NewUserController = {
       const queryParams = [
         user.firstName,
         user.lastName,
-        user.email,
+        user.email.toLowerCase(),
         res.locals.password,
         user.googleAuth,
         user.picture
@@ -48,7 +48,7 @@ const userController: NewUserController = {
       const { email } = req.body;
 
       const loginData = `SELECT * FROM users WHERE email = $1`;
-      const queryParam = [email];
+      const queryParam = [email.toLowerCase()];
 
       const response: any = await db.query(loginData, queryParam);
 

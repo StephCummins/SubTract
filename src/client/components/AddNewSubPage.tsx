@@ -17,7 +17,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
-import OrangeButton from './OrangeButton';
 
 const addNewSubPage = ({ user }): JSX.Element => {
   const [name, setName] = useState('');
@@ -51,8 +50,7 @@ const addNewSubPage = ({ user }): JSX.Element => {
       signupDate,
       monthlyFee: parseInt(monthlyFee),
       freeTrial,
-      dateFreeTrialEnds:
-        dateFreeTrialEnds === '' ? signupDate : dateFreeTrialEnds,
+      dateFreeTrialEnds: dateFreeTrialEnds === '' ? null : dateFreeTrialEnds,
       totalSpent: parseInt(totalSpent)
     };
 
@@ -77,22 +75,28 @@ const addNewSubPage = ({ user }): JSX.Element => {
       <CssBaseline />
       <MenuBar user={user} />
       <Container>
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              py: 3,
-              px: 3,
-              my: 8,
+              py: 5,
+              px: 5,
+              my: 5,
               mx: 5,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center'
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
             component="form"
             noValidate
             onSubmit={handleSubmit}
           >
-            <Typography variant="h1" color="primary" gutterBottom>
+            <Typography
+              variant="h1"
+              color="primary"
+              sx={{ textAlign: 'center' }}
+              gutterBottom
+            >
               Create Subscription
             </Typography>
             <TextField
@@ -104,8 +108,21 @@ const addNewSubPage = ({ user }): JSX.Element => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              // sx={{ mx: 4 }}
             >
               {name}
+            </TextField>
+            <TextField
+              margin="normal"
+              fullWidth
+              name="website"
+              label="Website"
+              id="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              // sx={{ mx: 2, xs: 4 }}
+            >
+              {website}
             </TextField>
             <TextField
               margin="normal"
@@ -130,39 +147,36 @@ const addNewSubPage = ({ user }): JSX.Element => {
                 defaultValue={dayjs(signupDate)}
                 value={dayjs(signupDate)}
                 onChange={(newValue) => handleSignupDate(newValue?.toString())}
+                sx={{ mt: 2 }}
               />
             </LocalizationProvider>
             <TextField
               id="freeTrial"
               select
+              fullWidth
               label="Free Trial"
               value={freeTrial}
               //defaultValue={freeTrial ? freeTrial : false}
               onChange={handleFreeTrialChange}
+              sx={{ mt: 2 }}
             >
-              <MenuItem value={true as any}>True</MenuItem>
-              <MenuItem value={false as any}>False</MenuItem>
+              <MenuItem value={true as any}>Yes</MenuItem>
+              <MenuItem value={false as any}>No</MenuItem>
             </TextField>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Date Free Trial Ends"
-                defaultValue={dayjs(dateFreeTrialEnds)}
-                value={dayjs(signupDate)}
-                onChange={(newValue) => handleDateChange(newValue?.toString())}
-              />
-            </LocalizationProvider>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="website"
-              label="Website"
-              id="website"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-            >
-              {website}
-            </TextField>
+            {freeTrial && (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Date Free Trial Ends"
+                  defaultValue={dayjs(dateFreeTrialEnds)}
+                  value={dayjs(signupDate)}
+                  onChange={(newValue) =>
+                    handleDateChange(newValue?.toString())
+                  }
+                  sx={{ mt: 2 }}
+                />
+              </LocalizationProvider>
+            )}
+
             <TextField
               margin="normal"
               required
@@ -183,22 +197,43 @@ const addNewSubPage = ({ user }): JSX.Element => {
             <Grid
               sx={{
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: { xs: 'column', md: 'row' },
                 justifyContent: 'center',
                 alignItems: 'center',
                 mt: 5
               }}
             >
-              <OrangeButton type={'submit'} handleOnClick={() => null}>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 1,
+                  mb: 5,
+                  py: 2,
+                  mx: 2,
+                  width: '225px',
+                  bgcolor: 'secondary.main',
+                  '&:active': {
+                    transform: 'translateY(4px)',
+                    bgcolor: 'secondary.main'
+                  },
+                  '&:hover': {
+                    bgcolor: 'secondary.dark'
+                  }
+                }}
+              >
                 Add New Subscription
-              </OrangeButton>
+              </Button>
               <Button
                 type="button"
                 variant="contained"
                 onClick={() => navigate('/dashboard')}
                 sx={{
                   width: '225px',
+                  mt: 1,
+                  mx: 2,
                   mb: 5,
+                  py: 2,
                   bgcolor: 'primary.main',
                   '&:active': {
                     transform: 'translateY(4px)'

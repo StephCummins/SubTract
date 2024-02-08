@@ -42,12 +42,9 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Typography variant="h1" color="primary" gutterBottom>
-        Subscription Dashboard
-      </Typography>
-      <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
+      {/* <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
         Add New Subscription
-      </OrangeButton>
+      </OrangeButton> */}
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -68,11 +65,15 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
               <TableCell>{subscription.name}</TableCell>
               <TableCell>{subscription.monthlyFee}</TableCell>
               <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
-              <TableCell>{subscription.freeTrial ? 'True' : 'False'}</TableCell>
+              <TableCell>{subscription.freeTrial ? 'Yes' : 'No'}</TableCell>
               <TableCell>
-                {subscription.dateFreeTrialEnds.slice(0, 10)}
+                {subscription.dateFreeTrialEnds
+                  ? subscription.dateFreeTrialEnds.slice(0, 10)
+                  : 'N/A'}
               </TableCell>
-              <TableCell>{subscription.website}</TableCell>
+              <TableCell>
+                {subscription.website ? subscription.website : 'N/A'}
+              </TableCell>
               <TableCell>{subscription.totalSpent}</TableCell>
               <TableCell>
                 <Button

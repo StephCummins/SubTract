@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 import SubscriptionTable from './SubscriptionTable';
 import PieChart from './PieChart';
 import type Subscription from '../models/subscriptionInterface';
+import OrangeButton from './OrangeButton';
 
 interface Datasets {
   data: number[];
@@ -31,6 +38,7 @@ const DashboardPage = ({
       }
     ]
   });
+  const navigate = useNavigate();
 
   const getSubscriptions = async () => {
     try {
@@ -77,20 +85,44 @@ const DashboardPage = ({
   }, []);
 
   return (
-    <main>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <MenuBar user={user} />
       <Grid
-        //container
-        // spacing={2}
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'start',
+          alignItems: 'center',
+          my: 5,
+          mx: 5
+        }}
+      >
+        <Typography
+          variant="h1"
+          color="primary"
+          gutterBottom
+          sx={{ mr: 7, mt: 2, mb: 5 }}
+        >
+          Subscription Dashboard
+        </Typography>
+        <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
+          Add New Subscription
+        </OrangeButton>
+      </Grid>
+      <Grid
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row-reverse' },
           justifyContent: 'center',
           alignItems: 'start',
           my: 5,
           mx: 5
         }}
       >
+        <Grid item xs={12} md={4}>
+          <PieChart pieChartData={pieChartData} />
+        </Grid>
         <Grid item xs={12} md={8}>
           <SubscriptionTable
             setCurrentSub={setCurrentSub}
@@ -98,11 +130,8 @@ const DashboardPage = ({
             setSubs={setSubs}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
-          <PieChart pieChartData={pieChartData} />
-        </Grid>
       </Grid>
-    </main>
+    </ThemeProvider>
   );
 };
 

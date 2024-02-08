@@ -8,11 +8,13 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 
 const addNewSubPage = ({ user }): JSX.Element => {
@@ -70,16 +72,17 @@ const addNewSubPage = ({ user }): JSX.Element => {
     }
   };
 
-  const defaultTheme = createTheme();
-
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <MenuBar user={user} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{
+            py: 3,
+            px: 3,
             my: 8,
-            mx: 4,
+            mx: 5,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
@@ -88,8 +91,8 @@ const addNewSubPage = ({ user }): JSX.Element => {
           noValidate
           onSubmit={handleSubmit}
         >
-          <Typography component="h1" variant="h5">
-            Update Subscription
+          <Typography variant="h1" color="primary" gutterBottom>
+            Create Subscription
           </Typography>
           <TextField
             margin="normal"
@@ -180,7 +183,18 @@ const addNewSubPage = ({ user }): JSX.Element => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              bgcolor: 'secondary.main',
+              '&:active': {
+                transform: 'translateY(4px)',
+                bgcolor: 'secondary.main'
+              },
+              '&:hover': {
+                bgcolor: 'secondary.dark'
+              }
+            }}
           >
             Add New Subscription
           </Button>

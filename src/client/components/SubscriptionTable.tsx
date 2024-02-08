@@ -48,25 +48,6 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
       <OrangeButton handleOnClick={() => navigate('/add')}>
         Add New Subscription
       </OrangeButton>
-      {/* <Button
-        type="button"
-        onClick={() => navigate('/add')}
-        variant="contained"
-        sx={{
-          mt: 1,
-          mb: 1,
-          bgcolor: 'secondary.main',
-          '&:active': {
-            transform: 'translateY(4px)',
-            bgcolor: 'secondary.main'
-          },
-          '&:hover': {
-            bgcolor: 'secondary.dark'
-          }
-        }}
-      >
-        Add New Subscription
-      </Button> */}
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -98,7 +79,13 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
                   type="submit"
                   onClick={() => handleEdit(subscription.subId)}
                   variant="contained"
-                  sx={{ mt: 1, mb: 1 }}
+                  sx={{
+                    mt: 1,
+                    mb: 1,
+                    '&:active': {
+                      transform: 'translateY(4px)'
+                    }
+                  }}
                 >
                   Edit
                 </Button>
@@ -108,7 +95,13 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
                   type="submit"
                   onClick={() => handleDelete(subscription.subId)}
                   variant="contained"
-                  sx={{ mt: 1, mb: 1 }}
+                  sx={{
+                    mt: 1,
+                    mb: 1,
+                    '&:active': {
+                      transform: 'translateY(4px)'
+                    }
+                  }}
                 >
                   Delete
                 </Button>

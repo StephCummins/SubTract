@@ -85,7 +85,7 @@ const DashboardPage = ({
         sx={{
           flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'start',
           my: 5,
           mx: 5
         }}

@@ -15,9 +15,11 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(false);
     const accountInfo = {
       firstName,
       lastName,
@@ -25,6 +27,11 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
       password,
       googleAuth: false
     };
+
+    if (!firstName || !lastName || !email || !password) {
+      setError(true);
+      return;
+    }
 
     signUp(accountInfo);
 
@@ -115,7 +122,18 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: '#FF4F00' }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: 'secondary.main',
+                '&:active': {
+                  transform: 'translateY(4px)',
+                  bgcolor: 'secondary.main'
+                },
+                '&:hover': {
+                  bgcolor: 'secondary.dark'
+                }
+              }}
             >
               Sign Up!
             </Button>
@@ -128,9 +146,14 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
               {duplicateUser && (
                 <Grid item sx={{ alignItems: 'left' }}>
                   <Typography sx={{ color: 'red' }}>
-                    <strong>
-                      An account with that email address already exists
-                    </strong>
+                    <strong>SubTract account already exists. Login.</strong>
+                  </Typography>
+                </Grid>
+              )}
+              {error && (
+                <Grid item sx={{ alignItems: 'left' }}>
+                  <Typography sx={{ color: 'red' }}>
+                    <strong>All fields required to create account.</strong>
                   </Typography>
                 </Grid>
               )}

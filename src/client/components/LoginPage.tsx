@@ -35,11 +35,22 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
   const [googleError, setGoogleError] = useState(false);
+  const [incompleteCredentials, setIncompleteCredentials] = useState(false);
 
   const navigate = useNavigate();
 
-  const login = async (loginInfo: { email: string; password: string }) => {
+  const resetErrorStatus = () => {
     setLoginError(false);
+    setIncompleteCredentials(false);
+    setGoogleError(false);
+  };
+
+  const login = async (loginInfo: { email: string; password: string }) => {
+    resetErrorStatus();
+    if (!email || !password) {
+      setIncompleteCredentials(true);
+      return;
+    }
     try {
       const response = await fetch('/user/login', {
         method: 'POST',
@@ -66,7 +77,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
   };
 
   const handleGoogleLogin = async (response: CredentialResponse) => {
-    setGoogleError(false);
+    resetErrorStatus();
     const responseInfo = jwtDecode(response.credential!);
 
     const user: GoogleProfile = {
@@ -89,10 +100,6 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
     }
   };
 
-  const handleOnClick = () => {
-    navigate('/signup');
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -100,7 +107,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
         <Grid
           item
           xs={false}
-          sm={4}
+          sm={false}
           md={7}
           sx={{
             backgroundImage: `url(${require('../../../public/assets/SubTract_Main.png')})`,
@@ -110,7 +117,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
             backgroundPosition: 'center'
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item sm={12} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 20,
@@ -124,12 +131,12 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
               sx={{
                 m: 1,
                 bgcolor: 'secondary.main',
-                display: { xs: 'none', sm: 'flex' }
+                display: { xs: 'none', md: 'flex' }
               }}
             >
               <LockOutlinedIcon />
             </Avatar>
-            <Box sx={{ m: 1, display: { xs: 'flex', sm: 'none' } }}>
+            <Box sx={{ m: 1, display: { sm: 'flex', md: 'none' } }}>
               <img
                 width="300px"
                 src={require('../../../public/assets/SubTract_Logo_Blue.png')}
@@ -139,7 +146,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
               component="form"
               noValidate
               onSubmit={handleFormLogin}
-              sx={{ width: '80%', mt: 1 }}
+              sx={{ px: 3, py: 3, mt: 1 }}
             >
               <TextField
                 margin="normal"
@@ -193,6 +200,13 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
                     </Typography>
                   </Grid>
                 )}
+                {incompleteCredentials && (
+                  <Grid item sx={{ alignItems: 'left' }}>
+                    <Typography sx={{ color: 'red' }}>
+                      <strong>Email and Password Required</strong>
+                    </Typography>
+                  </Grid>
+                )}
                 {googleError && (
                   <Grid item sx={{ alignItems: 'left' }}>
                     <Typography sx={{ color: 'red' }}>
@@ -204,9 +218,8 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
             </Box>
             <Box
               sx={{
-                width: '80%',
-                // px: 8,
-                // py: 3,
+                px: 5,
+                py: 3,
                 mt: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -227,7 +240,9 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
               <Typography variant="h5" sx={{ mt: 1 }}>
                 Don't Have An Account?
               </Typography>
-              <OrangeButton handleOnClick={handleOnClick}>Sign Up</OrangeButton>
+              <OrangeButton handleOnClick={() => navigate('/signup')}>
+                Sign Up
+              </OrangeButton>
             </Box>
           </Box>
         </Grid>

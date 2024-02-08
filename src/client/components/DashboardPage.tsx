@@ -80,9 +80,10 @@ const DashboardPage = ({
     <main>
       <MenuBar user={user} />
       <Grid
-        container
+        //container
         // spacing={2}
         sx={{
+          display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           justifyContent: 'center',
           alignItems: 'start',

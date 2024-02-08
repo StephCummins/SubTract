@@ -45,7 +45,7 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
       <Typography variant="h1" color="primary" gutterBottom>
         Subscription Dashboard
       </Typography>
-      <OrangeButton handleOnClick={() => navigate('/add')}>
+      <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
         Add New Subscription
       </OrangeButton>
       <Table size="small">

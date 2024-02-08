@@ -215,34 +215,37 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
                   </Grid>
                 )}
               </Grid>
-            </Box>
-            <Box
-              sx={{
-                px: 5,
-                py: 3,
-                mt: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                border: '1px dashed grey'
-              }}
-            >
-              <hr />
-              <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
-                Sign In With Google
-              </Typography>
-              <GoogleOAuthProvider
-                clientId={process.env.REACT_APP_GOOGLE_OUATH_CLIENT_ID!}
+              <Box
+                sx={{
+                  px: 5,
+                  py: 3,
+                  mt: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  border: '1px dashed grey'
+                }}
               >
-                <GoogleLogin onSuccess={handleGoogleLogin} />
-              </GoogleOAuthProvider>
-              <hr />
-              <Typography variant="h5" sx={{ mt: 1 }}>
-                Don't Have An Account?
-              </Typography>
-              <OrangeButton handleOnClick={() => navigate('/signup')}>
-                Sign Up
-              </OrangeButton>
+                <hr />
+                <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
+                  Sign In With Google
+                </Typography>
+                <GoogleOAuthProvider
+                  clientId={process.env.REACT_APP_GOOGLE_OUATH_CLIENT_ID!}
+                >
+                  <GoogleLogin onSuccess={handleGoogleLogin} />
+                </GoogleOAuthProvider>
+                <hr />
+                <Typography variant="h5" sx={{ mt: 1 }}>
+                  Don't Have An Account?
+                </Typography>
+                <OrangeButton
+                  type={'button'}
+                  handleOnClick={() => navigate('/signup')}
+                >
+                  Sign Up
+                </OrangeButton>
+              </Box>
             </Box>
           </Box>
         </Grid>

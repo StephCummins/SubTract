@@ -3,11 +3,11 @@ import Button from '@mui/material/Button';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 
-const OrangeButton = ({ handleOnClick, children }): JSX.Element => {
+const OrangeButton = ({ type, handleOnClick, children }): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Button
-        type="submit"
+        type={type}
         onClick={handleOnClick}
         variant="contained"
         sx={{

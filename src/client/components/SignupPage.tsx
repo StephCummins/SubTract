@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
+import OrangeButton from './OrangeButton';
 
 const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
   const [firstName, setFirstName] = useState('');

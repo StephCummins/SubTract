@@ -121,7 +121,6 @@ const App = (): JSX.Element => {
             setUser={setUser}
             currentSub={currentSub}
             setCurrentSub={setCurrentSub}
-            isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
           />
         }
@@ -134,7 +133,6 @@ const App = (): JSX.Element => {
             setCurrentSub={setCurrentSub}
             user={user}
             setUser={setUser}
-            isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
           />
         }
@@ -145,7 +143,6 @@ const App = (): JSX.Element => {
           <AddNewSubPage
             user={user}
             setUser={setUser}
-            isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
           />
         }

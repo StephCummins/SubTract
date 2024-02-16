@@ -27,7 +27,6 @@ const DashboardPage = ({
   setUser,
   currentSub,
   setCurrentSub,
-  isLoggedIn,
   setIsLoggedIn
 }): JSX.Element => {
   const [subs, setSubs] = useState([]);
@@ -89,12 +88,7 @@ const DashboardPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar
-        user={user}
-        setUser={setUser}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-      />
+      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Grid
         sx={{
           display: 'flex',

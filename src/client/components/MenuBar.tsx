@@ -14,9 +14,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 
-const settings = ['Profile', 'Account', 'Logout'];
+const settings = ['Logout'];
 
-const MenuBar = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
+const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );

@@ -23,7 +23,6 @@ const updateSubPage = ({
   setCurrentSub,
   user,
   setUser,
-  isLoggedIn,
   setIsLoggedIn
 }): JSX.Element => {
   const [name, setName] = useState(currentSub.name);
@@ -99,12 +98,7 @@ const updateSubPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar
-        user={user}
-        setUser={setUser}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-      />
+      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container>
         <Grid item xs={12} md={5} component={Paper} elevation={6} square>
           <Box

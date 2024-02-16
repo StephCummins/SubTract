@@ -2,15 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/db';
+import type JwtPayload from '../models/JwtPayloadInterface';
 import type ErrorMessage from '../models/errorInterface';
 import dotenv from 'dotenv';
 dotenv.config();
-
-interface JwtPayload {
-  id: number;
-  iat: number;
-  exp: number;
-}
 
 interface NewUserController {
   addNewUser(req: Request, res: Response, next: NextFunction): any;
@@ -41,8 +36,6 @@ const userController: NewUserController = {
 
       const response: any = await db.query(newUserData, queryParams);
       res.locals.newUser = response.rows[0];
-      console.log(res.locals.newUser);
-      console.log(res.locals.newUser.user_id);
       return next();
     } catch (error) {
       const message: ErrorMessage = {
@@ -63,13 +56,10 @@ const userController: NewUserController = {
         expiresIn: process.env.JWT_EXPIRATION
       });
 
-      console.log(token);
-
       res.cookie('token', token, {
         httpOnly: true,
         secure: true
       });
-      console.log('cookie success!');
 
       return next();
     } catch (error) {
@@ -115,7 +105,6 @@ const userController: NewUserController = {
         }
       });
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at userController.hashPassword',
         message: { error: 'Error hashing user password' }
@@ -146,8 +135,6 @@ const userController: NewUserController = {
   async checkUserAccount(req, res, next) {
     try {
       const { email } = req.query;
-      console.log('req.params', req.query);
-
       const userData = `SELECT * FROM users WHERE email = $1`;
       const queryParam = [email];
       const response: any = await db.query(userData, queryParam);
@@ -174,7 +161,7 @@ const userController: NewUserController = {
         const inactiveToken = `SELECT * FROM inactivejwt WHERE tokenname = $1`;
         const queryParamOne = [token];
         const inactive: any = await db.query(inactiveToken, queryParamOne);
-        console.log(inactive);
+
         if (!inactive.rows[0]) {
           const loginData = `SELECT * FROM users WHERE user_id = $1`;
           const queryParam = [payload.id];
@@ -183,11 +170,6 @@ const userController: NewUserController = {
         } else {
           res.locals.userData = undefined;
         }
-
-        // const loginData = `SELECT * FROM users WHERE user_id = $1`;
-        // const queryParam = [payload.id];
-        // const response: any = await db.query(loginData, queryParam);
-        // res.locals.userData = response.rows[0];
       } else {
         res.locals.userData = undefined;
       }
@@ -204,7 +186,6 @@ const userController: NewUserController = {
 
   async logout(req, res, next) {
     try {
-      console.log('In the logout middleware');
       const { token } = req.cookies;
       const payload = jwt.verify(
         token,

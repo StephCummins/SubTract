@@ -65,7 +65,8 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
 
   const login = async (loginInfo: { email: string; password: string }) => {
     resetErrorStatus();
-    if (!email || !password) {
+
+    if (!loginInfo.email || !loginInfo.password) {
       setIncompleteCredentials(true);
       return;
     }
@@ -79,7 +80,6 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
       if (!response.ok) throw response;
 
       const data = await response.json();
-
       await setUser(data);
       setIsLoggedIn(true);
       navigate('/dashboard');

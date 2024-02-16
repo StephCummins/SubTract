@@ -18,12 +18,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 
-const addNewSubPage = ({
-  user,
-  setUser,
-  isLoggedIn,
-  setIsLoggedIn
-}): JSX.Element => {
+const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
   const [signupDate, setSignupDate] = useState('');
@@ -78,12 +73,7 @@ const addNewSubPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar
-        user={user}
-        setUser={setUser}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-      />
+      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container>
         <Grid item xs={12} md={5} component={Paper} elevation={6} square>
           <Box

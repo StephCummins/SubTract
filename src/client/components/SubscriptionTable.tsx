@@ -75,7 +75,7 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
     return stabilizedRowArray.map((element) => element[0]);
   };
 
-  const headers = [
+  const headers: string[] = [
     'Subscription',
     'Monthly Fee',
     'Start Date',

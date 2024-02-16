@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   GoogleOAuthProvider,
@@ -30,7 +30,7 @@ declare module 'jwt-decode' {
   }
 }
 
-const LoginPage = ({ setUser, signUp }): JSX.Element => {
+const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState(false);
@@ -38,6 +38,24 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
   const [incompleteCredentials, setIncompleteCredentials] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, []);
+
+  const checkIfLoggedIn = async () => {
+    try {
+      const response = await fetch(`/user/checkifloggedin`);
+      if (!response.ok) throw response;
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        setIsLoggedIn(true);
+        await setUser(data);
+        navigate('/dashboard');
+      }
+    } catch (error) {}
+  };
 
   const resetErrorStatus = () => {
     setLoginError(false);
@@ -63,6 +81,7 @@ const LoginPage = ({ setUser, signUp }): JSX.Element => {
       const data = await response.json();
 
       await setUser(data);
+      setIsLoggedIn(true);
       navigate('/dashboard');
     } catch (error) {
       setLoginError(true);

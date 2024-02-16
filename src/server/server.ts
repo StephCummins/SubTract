@@ -1,12 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import userRouter from './routes/userRouter';
 import subsRouter from './routes/subsRouter';
 
 const PORT = 3000;
 
 const app = express();
+
 app.use(express.json());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: `http://localhost:${PORT}`
+  })
+);
 
 app.use(express.static(path.join(__dirname, '../../public')));
 

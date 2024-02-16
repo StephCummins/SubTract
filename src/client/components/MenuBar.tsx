@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,10 +16,12 @@ import theme from './MaterialUITheme';
 
 const settings = ['Profile', 'Account', 'Logout'];
 
-const MenuBar = ({ user }) => {
+const MenuBar = ({ user, setUser, isLoggedIn, setIsLoggedIn }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -28,10 +31,47 @@ const MenuBar = ({ user }) => {
     setAnchorElUser(null);
   };
 
-  function stringAvatar(
+  const handleMenuClick = (menuItem) => {
+    if (menuItem === 'Logout') handleLogOut();
+  };
+
+  const handleLogOut = async () => {
+    try {
+      console.log('Before the fetch request!');
+      const response = await fetch('/user/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      });
+
+      if (!response.ok) throw response;
+
+      resetUser();
+      setIsLoggedIn(false);
+      navigate('/');
+    } catch (error) {
+      console.log(error, 'ERROR WITH FETCH REQUEST!');
+    }
+  };
+
+  const resetUser = () => {
+    const emptyUserInfo = {
+      userId: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      googleAuth: null,
+      picture: null,
+      dateCreated: null
+    };
+    setUser(emptyUserInfo);
+  };
+
+  const stringAvatar = (
     first: string,
     last: string
-  ): { sx: { color: string; bgcolor: string }; children: string } {
+  ): { sx: { color: string; bgcolor: string }; children: string } => {
     return {
       sx: {
         color: 'black',
@@ -39,7 +79,7 @@ const MenuBar = ({ user }) => {
       },
       children: `${first[0]}${last[0]}`
     };
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -123,7 +163,12 @@ const MenuBar = ({ user }) => {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography
+                      textAlign="center"
+                      onClick={() => handleMenuClick(setting)}
+                    >
+                      {setting}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>

@@ -9,6 +9,8 @@ import type User from '../models/userInterface';
 import type Subscription from '../models/subscriptionInterface';
 
 const App = (): JSX.Element => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [user, setUser] = useState<User>({
     userId: null,
     firstName: '',
@@ -84,7 +86,7 @@ const App = (): JSX.Element => {
       const data = await response.json();
 
       setUser(data);
-
+      setIsLoggedIn(true);
       console.log('Successfully created account!');
       navigate('/dashboard');
     } catch (error) {
@@ -97,7 +99,13 @@ const App = (): JSX.Element => {
     <Routes>
       <Route
         path="/"
-        element={<LoginPage setUser={handleSetUser} signUp={handleSignup} />}
+        element={
+          <LoginPage
+            setUser={handleSetUser}
+            signUp={handleSignup}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+        }
       />
       <Route
         path="/signup"
@@ -113,6 +121,8 @@ const App = (): JSX.Element => {
             setUser={setUser}
             currentSub={currentSub}
             setCurrentSub={setCurrentSub}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
           />
         }
       />
@@ -123,10 +133,23 @@ const App = (): JSX.Element => {
             currentSub={currentSub}
             setCurrentSub={setCurrentSub}
             user={user}
+            setUser={setUser}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
           />
         }
       />
-      <Route path="/add" element={<AddNewSubPage user={user} />} />
+      <Route
+        path="/add"
+        element={
+          <AddNewSubPage
+            user={user}
+            setUser={setUser}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+        }
+      />
     </Routes>
   );
 };

@@ -12,7 +12,7 @@ import SubscriptionTable from './SubscriptionTable';
 import PieChart from './PieChart';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
-import TabPanel from './TabPanel';
+import PieChartTab from './PieChartTab';
 
 interface Datasets {
   data: number[];
@@ -142,30 +142,29 @@ const DashboardPage = ({
           mx: 5
         }}
       >
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label="Monthly Budget" />
-          <Tab label="Total Budget" />
-        </Tabs>
+        <PieChartTab
+          pieChartData={pieChartData}
+          totalSpentData={totalSpentData}
+        />
+        {/* <Grid
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Tabs value={value} onChange={handleChange}>
+            <Tab label="Monthly Budget" />
+            <Tab label="Total Budget" />
+          </Tabs>
 
-        {value === 0 && (
-          <Grid item xs={12} md={4}>
-            <Typography variant="h3" color="primary">
-              Monthly Budget
-            </Typography>
-            <PieChart pieChartData={pieChartData} />
-          </Grid>
-        )}
+          {value === 0 && <PieChart pieChartData={pieChartData} />}
 
-        {value === 1 && (
-          <Grid item xs={12} md={4}>
-            <Typography variant="h3" color="primary">
-              Total Budget
-            </Typography>
-            <PieChart pieChartData={totalSpentData} />
-          </Grid>
-        )}
+          {value === 1 && <PieChart pieChartData={totalSpentData} />}
+        </Grid> */}
 
-        <TabPanel
+        {/* <TabPanel
           value={value}
           index={0}
           title={'Monthly Budget'}
@@ -189,7 +188,7 @@ const DashboardPage = ({
             Total Budget
           </Typography>
           <PieChart pieChartData={totalSpentData} />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} md={8}>
           <SubscriptionTable

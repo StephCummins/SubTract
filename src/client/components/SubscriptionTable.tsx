@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TableContainer } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -90,97 +91,99 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            {headers.map((column: string) => {
-              let keyName = 'tbd';
+      <TableContainer>
+        <Table size="small" stickyHeader>
+          <TableHead>
+            <TableRow>
+              {headers.map((column: string) => {
+                let keyName = 'tbd';
 
-              switch (column) {
-                case 'Subscription':
-                  keyName = 'name';
-                  break;
-                case 'Monthly Fee':
-                  keyName = 'monthlyFee';
-                  break;
-                case 'Start Date':
-                  keyName = 'signupDate';
-                  break;
-                case 'Free Trial':
-                  keyName = 'freeTrial';
-                  break;
-                case 'End Date':
-                  keyName = 'dateFreeTrialEnds';
-                  break;
-                case 'Website':
-                  keyName = 'website';
-                  break;
-                case 'Total Spent':
-                  keyName = 'totalSpent';
-                  break;
-                case 'Delete':
-                  keyName = 'delete';
-                  break;
-                case 'Edit':
-                  keyName = 'edit';
-              }
+                switch (column) {
+                  case 'Subscription':
+                    keyName = 'name';
+                    break;
+                  case 'Monthly Fee':
+                    keyName = 'monthlyFee';
+                    break;
+                  case 'Start Date':
+                    keyName = 'signupDate';
+                    break;
+                  case 'Free Trial':
+                    keyName = 'freeTrial';
+                    break;
+                  case 'End Date':
+                    keyName = 'dateFreeTrialEnds';
+                    break;
+                  case 'Website':
+                    keyName = 'website';
+                    break;
+                  case 'Total Spent':
+                    keyName = 'totalSpent';
+                    break;
+                  case 'Delete':
+                    keyName = 'delete';
+                    break;
+                  case 'Edit':
+                    keyName = 'edit';
+                }
 
-              if (keyName === 'delete' || keyName === 'edit')
-                return <TableCell key={keyName} />;
+                if (keyName === 'delete' || keyName === 'edit')
+                  return <TableCell key={keyName} />;
 
-              if (keyName === 'website') {
-                return <TableCell key={keyName}>{column}</TableCell>;
-              }
+                if (keyName === 'website') {
+                  return <TableCell key={keyName}>{column}</TableCell>;
+                }
 
-              return (
-                <TableCell key={keyName}>
-                  <TableSortLabel
-                    active={columnToSortBy === keyName}
-                    direction={
-                      columnToSortBy === keyName ? sortDirection : 'asc'
-                    }
-                    onClick={() => handleSort(keyName)}
-                  >
-                    {column}
-                  </TableSortLabel>
-                </TableCell>
-              );
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedRowData(
-            subs,
-            getComparator(sortDirection, columnToSortBy)
-          ).map((subscription: any) => (
-            <TableRow key={subscription.subId} hover>
-              <TableCell>{subscription.name}</TableCell>
-              <TableCell>{subscription.monthlyFee}</TableCell>
-              <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
-              <TableCell>{subscription.freeTrial ? 'Yes' : 'No'}</TableCell>
-              <TableCell>
-                {subscription.dateFreeTrialEnds
-                  ? subscription.dateFreeTrialEnds.slice(0, 10)
-                  : 'N/A'}
-              </TableCell>
-              <TableCell>{subscription.totalSpent}</TableCell>
-              <TableCell>
-                {subscription.website ? subscription.website : 'N/A'}
-              </TableCell>
-              <TableCell>
-                <IconButton onClick={() => handleEdit(subscription.subId)}>
-                  <EditIcon />
-                </IconButton>
-              </TableCell>
-              <TableCell>
-                <IconButton onClick={() => handleDelete(subscription.subId)}>
-                  <DeleteForeverIcon />
-                </IconButton>
-              </TableCell>
+                return (
+                  <TableCell key={keyName}>
+                    <TableSortLabel
+                      active={columnToSortBy === keyName}
+                      direction={
+                        columnToSortBy === keyName ? sortDirection : 'asc'
+                      }
+                      onClick={() => handleSort(keyName)}
+                    >
+                      {column}
+                    </TableSortLabel>
+                  </TableCell>
+                );
+              })}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {sortedRowData(
+              subs,
+              getComparator(sortDirection, columnToSortBy)
+            ).map((subscription: any) => (
+              <TableRow key={subscription.subId} hover>
+                <TableCell>{subscription.name}</TableCell>
+                <TableCell>{`$${subscription.monthlyFee}`}</TableCell>
+                <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
+                <TableCell>{subscription.freeTrial ? 'Yes' : 'No'}</TableCell>
+                <TableCell>
+                  {subscription.dateFreeTrialEnds
+                    ? subscription.dateFreeTrialEnds.slice(0, 10)
+                    : 'N/A'}
+                </TableCell>
+                <TableCell>{`$${subscription.totalSpent}`}</TableCell>
+                <TableCell>
+                  {subscription.website ? subscription.website : 'N/A'}
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleEdit(subscription.subId)}>
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton onClick={() => handleDelete(subscription.subId)}>
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </ThemeProvider>
   );
 };

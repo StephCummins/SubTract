@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
@@ -11,6 +12,7 @@ import SubscriptionTable from './SubscriptionTable';
 import PieChart from './PieChart';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
+import TabPanel from './TabPanel';
 
 interface Datasets {
   data: number[];
@@ -30,6 +32,17 @@ const DashboardPage = ({
   setIsLoggedIn
 }): JSX.Element => {
   const [subs, setSubs] = useState([]);
+
+  const [totalSpentData, setTotalSpentData] = useState<Chart>({
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: []
+      }
+    ]
+  });
+
   const [pieChartData, setPieChartData] = useState<Chart>({
     labels: [],
     datasets: [
@@ -39,6 +52,7 @@ const DashboardPage = ({
       }
     ]
   });
+
   const navigate = useNavigate();
 
   const getSubscriptions = async () => {
@@ -49,14 +63,13 @@ const DashboardPage = ({
       if (!response.ok) throw response;
       const data = await response.json();
       if (data[0]) setSubs(data);
-      console.log('GOT ALL SUBS!!!');
       return data;
     } catch (error) {
       console.log('Error retrieving all user subscriptions');
     }
   };
 
-  const generatePieChartData = (subInfo: Subscription[]) => {
+  const generatePieChartData = (subInfo: Subscription[], title, func) => {
     const updatedPieChart: Chart = {
       labels: [],
       datasets: [
@@ -68,22 +81,30 @@ const DashboardPage = ({
     };
 
     subInfo.forEach((subscription: Subscription) => {
-      const label = `${subscription.name} $${subscription.monthlyFee}`;
+      const label = `${subscription.name} $${subscription[title]}`;
       updatedPieChart.labels.push(label);
-      updatedPieChart.datasets[0].data.push(subscription.monthlyFee!);
+      updatedPieChart.datasets[0].data.push(subscription[title]!);
     });
 
-    setPieChartData(updatedPieChart);
+    func(updatedPieChart);
   };
 
   const loadPage = async () => {
     const data = await getSubscriptions();
-    generatePieChartData(data);
+    generatePieChartData(data, 'monthlyFee', setPieChartData);
+    generatePieChartData(data, 'totalSpent', setTotalSpentData);
   };
 
   useEffect(() => {
     loadPage();
   }, []);
+
+  const [value, setValue] = useState(0);
+
+  const handleChange = (e, newValue) => {
+    console.log(newValue);
+    setValue(newValue);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -121,9 +142,55 @@ const DashboardPage = ({
           mx: 5
         }}
       >
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Monthly Budget" />
+          <Tab label="Total Budget" />
+        </Tabs>
+
+        {value === 0 && (
+          <Grid item xs={12} md={4}>
+            <Typography variant="h3" color="primary">
+              Monthly Budget
+            </Typography>
+            <PieChart pieChartData={pieChartData} />
+          </Grid>
+        )}
+
+        {value === 1 && (
+          <Grid item xs={12} md={4}>
+            <Typography variant="h3" color="primary">
+              Total Budget
+            </Typography>
+            <PieChart pieChartData={totalSpentData} />
+          </Grid>
+        )}
+
+        <TabPanel
+          value={value}
+          index={0}
+          title={'Monthly Budget'}
+          pieChartData={pieChartData}
+        />
+        <TabPanel
+          value={value}
+          index={1}
+          title={'Total Budget'}
+          pieChartData={totalSpentData}
+        />
+
         <Grid item xs={12} md={4}>
+          <Typography variant="h3" color="primary">
+            Monthly Budget
+          </Typography>
           <PieChart pieChartData={pieChartData} />
         </Grid>
+        <Grid item xs={12} md={4}>
+          <Typography variant="h3" color="primary">
+            Total Budget
+          </Typography>
+          <PieChart pieChartData={totalSpentData} />
+        </Grid>
+
         <Grid item xs={12} md={8}>
           <SubscriptionTable
             setCurrentSub={setCurrentSub}

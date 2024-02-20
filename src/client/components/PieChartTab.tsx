@@ -12,15 +12,12 @@ const PieChartTab = ({ pieChartData, totalSpentData }): JSX.Element => {
   };
 
   return (
-    <Grid
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Tabs value={currentTab} onChange={handleChange}>
+    <>
+      <Tabs
+        value={currentTab}
+        onChange={handleChange}
+        sx={{ width: { xs: 400, md: 300, lg: 300, xl: 450 } }}
+      >
         <Tab label="Monthly Budget" />
         <Tab label="Total Budget" />
       </Tabs>
@@ -28,7 +25,7 @@ const PieChartTab = ({ pieChartData, totalSpentData }): JSX.Element => {
       {currentTab === 0 && <PieChart pieChartData={pieChartData} />}
 
       {currentTab === 1 && <PieChart pieChartData={totalSpentData} />}
-    </Grid>
+    </>
   );
 };
 

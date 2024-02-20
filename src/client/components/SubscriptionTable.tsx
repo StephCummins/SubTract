@@ -91,8 +91,10 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <TableContainer>
-        <Table size="small" stickyHeader>
+      <TableContainer
+        sx={{ width: { xs: 400, sm: 500, md: 600, lg: 1000, xl: 1200 } }}
+      >
+        <Table stickyHeader sx={{ width: 'max-content' }}>
           <TableHead>
             <TableRow>
               {headers.map((column: string) => {

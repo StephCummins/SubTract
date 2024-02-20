@@ -3,13 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 import SubscriptionTable from './SubscriptionTable';
-import PieChart from './PieChart';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
@@ -99,107 +96,118 @@ const DashboardPage = ({
     loadPage();
   }, []);
 
-  const [value, setValue] = useState(0);
-
-  const handleChange = (e, newValue) => {
-    console.log(newValue);
-    setValue(newValue);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Grid
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'start',
-          alignItems: 'center',
-          my: 5,
-          mx: 5
-        }}
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
       >
-        <Typography
-          variant="h1"
-          color="primary"
-          gutterBottom
-          sx={{ mr: 7, mt: 2, mb: 5 }}
-        >
-          Subscription Dashboard
-        </Typography>
-        <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
-          Add New Subscription
-        </OrangeButton>
-      </Grid>
-      <Grid
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row-reverse' },
-          justifyContent: 'center',
-          alignItems: 'start',
-          my: 5,
-          mx: 5
-        }}
-      >
-        <PieChartTab
-          pieChartData={pieChartData}
-          totalSpentData={totalSpentData}
-        />
-        {/* <Grid
+        <Grid
+          container
+          spacing={4}
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: { xs: 'center' },
+            alignItems: 'center',
+            mt: 1,
+            mb: { xs: 2, md: 4 }
           }}
         >
-          <Tabs value={value} onChange={handleChange}>
-            <Tab label="Monthly Budget" />
-            <Tab label="Total Budget" />
-          </Tabs>
-
-          {value === 0 && <PieChart pieChartData={pieChartData} />}
-
-          {value === 1 && <PieChart pieChartData={totalSpentData} />}
-        </Grid> */}
-
-        {/* <TabPanel
-          value={value}
-          index={0}
-          title={'Monthly Budget'}
-          pieChartData={pieChartData}
-        />
-        <TabPanel
-          value={value}
-          index={1}
-          title={'Total Budget'}
-          pieChartData={totalSpentData}
-        />
-
-        <Grid item xs={12} md={4}>
-          <Typography variant="h3" color="primary">
-            Monthly Budget
-          </Typography>
-          <PieChart pieChartData={pieChartData} />
+          <Grid item>
+            <Typography variant="h1" color="primary">
+              Subscription Dashboard
+            </Typography>
+          </Grid>
+          <Grid item sx={{ mt: { md: 2.5, xs: -2 } }}>
+            <OrangeButton
+              type={'button'}
+              handleOnClick={() => navigate('/add')}
+            >
+              Add New Subscription
+            </OrangeButton>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography variant="h3" color="primary">
-            Total Budget
-          </Typography>
-          <PieChart pieChartData={totalSpentData} />
-        </Grid> */}
-
-        <Grid item xs={12} md={8}>
-          <SubscriptionTable
-            setCurrentSub={setCurrentSub}
-            subs={subs}
-            setSubs={setSubs}
-          />
+        <Grid
+          container
+          spacing={5}
+          sx={{
+            flexDirection: { xs: 'column', md: 'row-reverse' },
+            justifyContent: 'center',
+            alignItems: { xs: 'center', md: 'start' }
+          }}
+        >
+          <Grid item>
+            <PieChartTab
+              pieChartData={pieChartData}
+              totalSpentData={totalSpentData}
+            />
+          </Grid>
+          <Grid item>
+            <SubscriptionTable
+              setCurrentSub={setCurrentSub}
+              subs={subs}
+              setSubs={setSubs}
+            />
+          </Grid>
         </Grid>
       </Grid>
     </ThemeProvider>
   );
+
+  // return (
+  //   <ThemeProvider theme={theme}>
+  //     <CssBaseline />
+  //     <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
+  //     <Grid
+  //       sx={{
+  //         display: 'flex',
+  //         flexDirection: { xs: 'column', md: 'row' },
+  //         justifyContent: 'start',
+  //         alignItems: 'center',
+  //         my: 5,
+  //         mx: 5
+  //       }}
+  //     >
+  //       <Typography
+  //         variant="h1"
+  //         color="primary"
+  //         gutterBottom
+  //         sx={{ mr: 7, mt: 2, mb: 5 }}
+  //       >
+  //         Subscription Dashboard
+  //       </Typography>
+  //       <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
+  //         Add New Subscription
+  //       </OrangeButton>
+  //     </Grid>
+  //     <Grid
+  //       sx={{
+  //         display: 'flex',
+  //         flexDirection: { xs: 'column', md: 'row-reverse' },
+  //         justifyContent: 'center',
+  //         alignItems: 'start',
+  //         my: 5,
+  //         mx: 5
+  //       }}
+  //     >
+  //       <PieChartTab
+  //         pieChartData={pieChartData}
+  //         totalSpentData={totalSpentData}
+  //       />
+  //       <Grid item xs={12} md={8}>
+  //         <SubscriptionTable
+  //           setCurrentSub={setCurrentSub}
+  //           subs={subs}
+  //           setSubs={setSubs}
+  //         />
+  //       </Grid>
+  //     </Grid>
+  //   </ThemeProvider>
+  // );
 };
 
 export default DashboardPage;

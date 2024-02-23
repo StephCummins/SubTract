@@ -1,27 +1,36 @@
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
-import OrangeButton from './OrangeButton';
+import UserErrors from '../models/UserErrors';
 
-const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
+interface NewUserAccount {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  googleAuth: boolean;
+}
+
+const SignupPage = ({ signUp, userError, setUserError }): JSX.Element => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(false);
-    const accountInfo = {
+
+    setUserError(UserErrors.NONE);
+
+    const accountInfo: NewUserAccount = {
       firstName,
       lastName,
       email,
@@ -30,7 +39,7 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
     };
 
     if (!firstName || !lastName || !email || !password) {
-      setError(true);
+      setUserError(UserErrors.INCOMPLETE_CREDENTIALS);
       return;
     }
 
@@ -41,6 +50,7 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
     setEmail('');
     setPassword('');
   };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -144,14 +154,14 @@ const SignupPage = ({ signUp, duplicateUser }): JSX.Element => {
                   Already have an account? Sign in
                 </Link>
               </Grid>
-              {duplicateUser && (
+              {userError === UserErrors.DUPLICATE_USER && (
                 <Grid item sx={{ alignItems: 'left' }}>
                   <Typography sx={{ color: 'red' }}>
                     <strong>SubTract account already exists. Login.</strong>
                   </Typography>
                 </Grid>
               )}
-              {error && (
+              {userError === UserErrors.INCOMPLETE_CREDENTIALS && (
                 <Grid item sx={{ alignItems: 'left' }}>
                   <Typography sx={{ color: 'red' }}>
                     <strong>All fields required to create account.</strong>

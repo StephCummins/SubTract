@@ -43,6 +43,8 @@ const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(user);
+    console.log(user.userId);
     const newSub = {
       userId: user.userId,
       name,

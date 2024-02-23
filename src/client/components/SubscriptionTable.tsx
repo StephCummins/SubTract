@@ -15,7 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import IconButton from '@mui/material/IconButton';
 
-const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
+const SubscriptionTable = ({ setCurrentSub, subs, loadPage }): JSX.Element => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [columnToSortBy, setColumnToSortBy] = useState('name');
 
@@ -37,8 +37,7 @@ const SubscriptionTable = ({ setCurrentSub, subs, setSubs }): JSX.Element => {
         body: JSON.stringify({ subId })
       });
       if (!response.ok) throw response;
-      const newSubs = subs.filter((sub: Subscription) => sub.subId !== subId);
-      setSubs(newSubs);
+      loadPage();
     } catch (error) {
       console.log('Error deleting subscription');
     }

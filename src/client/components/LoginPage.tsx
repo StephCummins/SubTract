@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 import OrangeButton from './OrangeButton';
+import UserErrors from '../models/UserErrors';
 import type GoogleProfile from '../models/GoogleProfile';
 
 declare module 'jwt-decode' {
@@ -30,12 +31,15 @@ declare module 'jwt-decode' {
   }
 }
 
-const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
+const LoginPage = ({
+  setUser,
+  signUp,
+  setIsLoggedIn,
+  userError,
+  setUserError
+}): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [googleError, setGoogleError] = useState(false);
-  const [incompleteCredentials, setIncompleteCredentials] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,27 +51,24 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
     try {
       const response = await fetch(`/user/checkifloggedin`);
       if (!response.ok) throw response;
+
       const data = await response.json();
-      console.log(data);
+
       if (data) {
         setIsLoggedIn(true);
         await setUser(data);
         navigate('/dashboard');
       }
-    } catch (error) {}
-  };
-
-  const resetErrorStatus = () => {
-    setLoginError(false);
-    setIncompleteCredentials(false);
-    setGoogleError(false);
+    } catch {
+      setIsLoggedIn(false);
+    }
   };
 
   const login = async (loginInfo: { email: string; password: string }) => {
-    resetErrorStatus();
+    setUserError(UserErrors.NONE);
 
     if (!loginInfo.email || !loginInfo.password) {
-      setIncompleteCredentials(true);
+      setUserError(UserErrors.INCOMPLETE_CREDENTIALS);
       return;
     }
     try {
@@ -84,7 +85,7 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
       setIsLoggedIn(true);
       navigate('/dashboard');
     } catch (error) {
-      setLoginError(true);
+      setUserError(UserErrors.LOGIN_ERROR);
     }
   };
 
@@ -96,7 +97,7 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
   };
 
   const handleGoogleLogin = async (response: CredentialResponse) => {
-    resetErrorStatus();
+    setUserError(UserErrors.NONE);
     const responseInfo = jwtDecode(response.credential!);
 
     const user: GoogleProfile = {
@@ -115,7 +116,7 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
       if (data[0]) login(user);
       else signUp(user);
     } catch (error) {
-      setGoogleError(true);
+      setUserError(UserErrors.GOOGLE_ERROR);
     }
   };
 
@@ -143,6 +144,7 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
+              justifyContent: 'center',
               alignItems: 'center'
             }}
           >
@@ -212,21 +214,21 @@ const LoginPage = ({ setUser, signUp, setIsLoggedIn }): JSX.Element => {
                     Forgot password?
                   </Link>
                 </Grid>
-                {loginError && (
+                {userError === UserErrors.LOGIN_ERROR && (
                   <Grid item sx={{ alignItems: 'left' }}>
                     <Typography sx={{ color: 'red' }}>
                       <strong>Incorrect Login Credentials!</strong>
                     </Typography>
                   </Grid>
                 )}
-                {incompleteCredentials && (
+                {userError === UserErrors.INCOMPLETE_CREDENTIALS && (
                   <Grid item sx={{ alignItems: 'left' }}>
                     <Typography sx={{ color: 'red' }}>
                       <strong>Email and Password Required</strong>
                     </Typography>
                   </Grid>
                 )}
-                {googleError && (
+                {userError === UserErrors.GOOGLE_ERROR && (
                   <Grid item sx={{ alignItems: 'left' }}>
                     <Typography sx={{ color: 'red' }}>
                       <strong>Google Error Logging In!</strong>

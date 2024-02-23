@@ -29,6 +29,7 @@ const DashboardPage = ({
   setIsLoggedIn
 }): JSX.Element => {
   const [subs, setSubs] = useState([]);
+  console.log('user on dashboard page', user);
 
   const [totalSpentData, setTotalSpentData] = useState<Chart>({
     labels: [],
@@ -150,7 +151,7 @@ const DashboardPage = ({
             <SubscriptionTable
               setCurrentSub={setCurrentSub}
               subs={subs}
-              setSubs={setSubs}
+              loadPage={loadPage}
             />
           </Grid>
         </Grid>

@@ -5,10 +5,12 @@ import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import UpdateSubPage from './UpdateSubPage';
 import AddNewSubPage from './AddNewSubPage';
+import UserErrors from '../models/UserErrors';
 import type User from '../models/userInterface';
 import type Subscription from '../models/subscriptionInterface';
 
 const App = (): JSX.Element => {
+  const [userError, setUserError] = useState(UserErrors.NONE);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [user, setUser] = useState<User>({
@@ -73,7 +75,7 @@ const App = (): JSX.Element => {
   };
 
   const handleSignup = async (signupInfo: User) => {
-    setDuplicateUser(false);
+    setUserError(UserErrors.NONE);
     try {
       const response = await fetch('/user/signup', {
         method: 'POST',
@@ -85,12 +87,11 @@ const App = (): JSX.Element => {
 
       const data = await response.json();
 
-      setUser(data);
+      handleSetUser(data);
       setIsLoggedIn(true);
-      console.log('Successfully created account!');
       navigate('/dashboard');
     } catch (error) {
-      setDuplicateUser(true);
+      setUserError(UserErrors.DUPLICATE_USER);
       console.log('Error signing up for account:', error);
     }
   };
@@ -104,13 +105,19 @@ const App = (): JSX.Element => {
             setUser={handleSetUser}
             signUp={handleSignup}
             setIsLoggedIn={setIsLoggedIn}
+            userError={userError}
+            setUserError={setUserError}
           />
         }
       />
       <Route
         path="/signup"
         element={
-          <SignupPage signUp={handleSignup} duplicateUser={duplicateUser} />
+          <SignupPage
+            signUp={handleSignup}
+            userError={userError}
+            setUserError={setUserError}
+          />
         }
       />
       <Route

@@ -17,7 +17,6 @@ userRouter.post(
   userController.login,
   userController.authUser,
   userController.setCookie,
-  //userController.checkIfLoggedIn,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.userData);
   }

@@ -10,7 +10,7 @@ import SubscriptionTable from './SubscriptionTable';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
-import ServerErrors from '../../server/models/serverErrors';
+import ServerErrors from '../../server/models/ServerErrors';
 
 interface Datasets {
   data: number[];
@@ -62,7 +62,7 @@ const DashboardPage = ({
         return data.formattedSubs;
       } else return [];
     } catch (error) {
-      console.log('Error retrieving all user subscriptions');
+      console.log('Error retrieving all user subscriptions', error);
     }
   };
 
@@ -159,6 +159,7 @@ const DashboardPage = ({
             <SubscriptionTable
               setCurrentSub={setCurrentSub}
               subs={subs}
+              setIsLoggedIn={setIsLoggedIn}
               loadPage={loadPage}
             />
           </Grid>

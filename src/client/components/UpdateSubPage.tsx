@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
+import ServerErrors from '../../server/models/ServerErrors';
 
 const updateSubPage = ({
   currentSub,
@@ -77,21 +78,29 @@ const updateSubPage = ({
 
       if (!response.ok) throw response;
 
-      setCurrentSub({
-        subId: null,
-        userId: null,
-        name: '',
-        website: '',
-        signupDate: '',
-        monthlyFee: null,
-        freeTrial: false,
-        dateFreeTrialEnds: '',
-        totalSpent: null
-      });
+      const data = await response.json();
+      console.log(data);
 
-      navigate('/dashboard');
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        setIsLoggedIn(false);
+        navigate('/');
+      } else {
+        setCurrentSub({
+          subId: null,
+          userId: null,
+          name: '',
+          website: '',
+          signupDate: '',
+          monthlyFee: null,
+          freeTrial: false,
+          dateFreeTrialEnds: '',
+          totalSpent: null
+        });
+
+        navigate('/dashboard');
+      }
     } catch (error) {
-      console.log('Error updating subscription!');
+      console.log('Error updating subscription!', error);
     }
   };
 

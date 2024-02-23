@@ -14,8 +14,14 @@ import type Subscription from '../models/subscriptionInterface';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import IconButton from '@mui/material/IconButton';
+import ServerErrors from '../../server/models/ServerErrors';
 
-const SubscriptionTable = ({ setCurrentSub, subs, loadPage }): JSX.Element => {
+const SubscriptionTable = ({
+  setCurrentSub,
+  subs,
+  setIsLoggedIn,
+  loadPage
+}): JSX.Element => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [columnToSortBy, setColumnToSortBy] = useState('name');
 
@@ -37,7 +43,15 @@ const SubscriptionTable = ({ setCurrentSub, subs, loadPage }): JSX.Element => {
         body: JSON.stringify({ subId })
       });
       if (!response.ok) throw response;
-      loadPage();
+
+      const data = await response.json();
+
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        setIsLoggedIn(false);
+        navigate('/');
+      } else {
+        loadPage();
+      }
     } catch (error) {
       console.log('Error deleting subscription');
     }

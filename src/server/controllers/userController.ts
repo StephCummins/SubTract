@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/db';
-import ServerErrors from '../models/serverErrors';
+import ServerErrors from '../models/ServerErrors';
 import type JwtPayload from '../models/JwtPayloadInterface';
 import type ErrorMessage from '../models/errorInterface';
 import dotenv from 'dotenv';

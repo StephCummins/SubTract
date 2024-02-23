@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import db from '../database/db';
-import ServerErrors from '../models/serverErrors';
+import ServerErrors from '../models/ServerErrors';
 import type ErrorMessage from '../models/errorInterface';
 import type DatabaseSubscription from '../models/dbSubInterface';
 
@@ -26,7 +26,6 @@ const subsController: NewSubsController = {
       }
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at subsController.getAllSubs',
         message: { error: 'Error retrieving all subscriptions' }
@@ -37,29 +36,31 @@ const subsController: NewSubsController = {
 
   async addNewSub(req, res, next) {
     try {
-      const sub = req.body;
-      console.log('Entered Subs Controller!');
-      console.log(req.body);
+      if (res.locals.message === ServerErrors.NONE) {
+        const sub = req.body;
 
-      const newSubData = `INSERT INTO subscriptions (user_id, name, website, signup_date, monthly_fee, free_trial, date_free_trial_ends, total_spent) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+        const newSubData = `INSERT INTO subscriptions (user_id, name, 
+                            website, signup_date, monthly_fee, free_trial, 
+                            date_free_trial_ends, total_spent) VALUES($1, 
+                            $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
 
-      const queryParams = [
-        sub.userId,
-        sub.name,
-        sub.website,
-        sub.signupDate,
-        sub.monthlyFee,
-        sub.freeTrial,
-        sub.dateFreeTrialEnds,
-        sub.totalSpent
-      ];
+        const queryParams = [
+          sub.userId,
+          sub.name,
+          sub.website,
+          sub.signupDate,
+          sub.monthlyFee,
+          sub.freeTrial,
+          sub.dateFreeTrialEnds,
+          sub.totalSpent
+        ];
 
-      const response: any = await db.query(newSubData, queryParams);
-      res.locals.newSub = response.rows[0];
-      console.log(res.locals.newSub);
+        const response: any = await db.query(newSubData, queryParams);
+        res.locals.newSub = response.rows[0];
+      }
+
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at subsController.addNewSub',
         message: { error: 'Error adding new subscription' }
@@ -70,28 +71,32 @@ const subsController: NewSubsController = {
 
   async editSub(req, res, next) {
     try {
-      const updatedSub = req.body;
-      console.log('In the server! editSub controller');
-      console.log(updatedSub);
+      if (res.locals.message === ServerErrors.NONE) {
+        const updatedSub = req.body;
 
-      const updatedSubData = `UPDATE subscriptions SET name = $1, website = $2, signup_date = $3, monthly_fee = $4, free_trial = $5, date_free_trial_ends = $6, total_spent = $7 WHERE subscription_id = $8`;
+        const updatedSubData = `UPDATE subscriptions SET name = $1, 
+                                website = $2, signup_date = $3, 
+                                monthly_fee = $4, free_trial = $5, 
+                                date_free_trial_ends = $6, 
+                                total_spent = $7 WHERE 
+                                subscription_id = $8`;
 
-      const queryParams = [
-        updatedSub.name,
-        updatedSub.website,
-        updatedSub.signupDate,
-        updatedSub.monthlyFee,
-        updatedSub.freeTrial,
-        updatedSub.dateFreeTrialEnds,
-        updatedSub.totalSpent,
-        updatedSub.subId
-      ];
+        const queryParams = [
+          updatedSub.name,
+          updatedSub.website,
+          updatedSub.signupDate,
+          updatedSub.monthlyFee,
+          updatedSub.freeTrial,
+          updatedSub.dateFreeTrialEnds,
+          updatedSub.totalSpent,
+          updatedSub.subId
+        ];
 
-      await db.query(updatedSubData, queryParams);
+        await db.query(updatedSubData, queryParams);
+      }
 
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at subsController.editSub',
         message: { error: 'Error updating subscription' }
@@ -102,15 +107,17 @@ const subsController: NewSubsController = {
 
   async deleteSub(req, res, next) {
     try {
-      const { subId } = req.body;
+      if (res.locals.message === ServerErrors.NONE) {
+        const { subId } = req.body;
 
-      const subDelete = `DELETE FROM subscriptions WHERE subscription_id = $1`;
-      const queryParams = [subId];
-      await db.query(subDelete, queryParams);
+        const subDelete = `DELETE FROM subscriptions WHERE subscription_id = $1`;
+        const queryParams = [subId];
+
+        await db.query(subDelete, queryParams);
+      }
 
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at subsController.deleteSub',
         message: { error: 'Error deleting subscription' }
@@ -140,7 +147,6 @@ const subsController: NewSubsController = {
       }
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at subsController.formatSub',
         message: { error: 'Error formating subs' }

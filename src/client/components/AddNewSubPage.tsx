@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
+import ServerErrors from '../../server/models/ServerErrors';
 
 const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
   const [name, setName] = useState('');
@@ -43,8 +44,7 @@ const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(user);
-    console.log(user.userId);
+
     const newSub = {
       userId: user.userId,
       name,
@@ -66,9 +66,16 @@ const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
 
       if (!response.ok) throw response;
 
-      navigate('/dashboard');
+      const data = await response.json();
+
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        setIsLoggedIn(false);
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
-      console.log('Error adding new subscription!');
+      console.log('Error adding new subscription!', error);
     }
   };
 

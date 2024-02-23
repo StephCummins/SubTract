@@ -9,39 +9,39 @@ subsRouter.get(
   subsController.getAllSubs,
   subsController.formatSubs,
   (req: Request, res: Response, next: NextFunction) => {
-    return res
-      .status(200)
-      .send({
-        message: res.locals.message,
-        formattedSubs: res.locals.formattedSubs
-      });
+    return res.status(200).send({
+      message: res.locals.message,
+      formattedSubs: res.locals.formattedSubs
+    });
   }
 );
 
 subsRouter.post(
   '/addsub',
-  //userController.authUserToken,
+  userController.authUserToken,
   subsController.addNewSub,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send(res.locals.newSub);
+    return res
+      .status(200)
+      .send({ message: res.locals.message, newSub: res.locals.newSub });
   }
 );
 
 subsRouter.patch(
   '/editsub',
-  //userController.authUserToken,
+  userController.authUserToken,
   subsController.editSub,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send('Subscription successfully updated!');
+    return res.status(200).send({ message: res.locals.message });
   }
 );
 
 subsRouter.delete(
   '/deletesub',
-  //userController.authUserToken,
+  userController.authUserToken,
   subsController.deleteSub,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send('Subscription deleted');
+    return res.status(200).send({ message: res.locals.message });
   }
 );
 

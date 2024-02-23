@@ -1,2 +1,30 @@
 # SubTract
-Subscription Tracker App for Budgeting
+
+![Login Page](https://github.com/StephCummins/SubTract/blob/main/public/assets/SubTract_ReadMe_1.png?raw=true)
+
+Subtract is a subscription tracking application designed to help consumers take control of their finances, featuring:
+
+- Secure User Authentication via Google OAuth, JSON Web Tokens, and Bcrypt for Password Hashing
+- REST API for efficient client-server communication with Node.js and Express
+- Interactive user interface designed with reusable components leveraging React's component-based architecture
+- Responsive Design for a seamless user experience across devices of all sizes
+
+![Dashboard](https://github.com/StephCummins/SubTract/blob/main/public/assets/SubTract_ReadMe_3.png?raw=true)
+
+## Tech Stack
+
+<div align="center">
+• TypeScript
+• React
+• Node.js
+• Express
+• RESTful APIs
+• PostgreSQL SQL Database
+• Google OAuth
+• JSON Web Tokens
+• Bcrypt
+• Material UI
+</div>
+<br>
+
+![Update Subscription Page](https://github.com/StephCummins/SubTract/blob/main/public/assets/SubTract_ReadMe_6.png?raw=true)

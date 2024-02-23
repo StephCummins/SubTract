@@ -122,7 +122,6 @@ const userController: NewUserController = {
       res.locals.userData = response.rows[0];
       return next();
     } catch (error) {
-      console.log(error);
       const message: ErrorMessage = {
         log: 'Error at userController.login',
         message: { error: 'Error logging in' }
@@ -239,7 +238,6 @@ const userController: NewUserController = {
         const queryParam = [token];
         await db.query(inactiveJWT, queryParam);
         res.clearCookie('token');
-        console.log(res.cookie);
       }
 
       return next();

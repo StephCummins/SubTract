@@ -53,6 +53,7 @@ const LoginPage = ({
       if (!response.ok) throw response;
 
       const data = await response.json();
+      console.log(data);
 
       if (data) {
         setIsLoggedIn(true);

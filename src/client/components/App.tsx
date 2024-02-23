@@ -126,7 +126,6 @@ const App = (): JSX.Element => {
           <DashboardPage
             user={user}
             setUser={setUser}
-            currentSub={currentSub}
             setCurrentSub={setCurrentSub}
             setIsLoggedIn={setIsLoggedIn}
           />

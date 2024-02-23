@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import db from '../database/db';
+import ServerErrors from '../models/serverErrors';
 import type ErrorMessage from '../models/errorInterface';
 import type DatabaseSubscription from '../models/dbSubInterface';
 
@@ -14,15 +15,15 @@ interface NewSubsController {
 const subsController: NewSubsController = {
   async getAllSubs(req, res, next) {
     try {
-      const { userId } = req.query;
+      if (res.locals.message === ServerErrors.NONE) {
+        const { userId } = req.query;
 
-      const subsData = `SELECT * FROM subscriptions WHERE user_id = $1`;
-      const queryParam = [Number(userId)];
+        const subsData = `SELECT * FROM subscriptions WHERE user_id = $1`;
+        const queryParam = [Number(userId)];
 
-      const response: any = await db.query(subsData, queryParam);
-      res.locals.allSubs = response.rows;
-      console.log(res.locals.allSubs);
-
+        const response: any = await db.query(subsData, queryParam);
+        res.locals.allSubs = response.rows;
+      }
       return next();
     } catch (error) {
       console.log(error);
@@ -120,7 +121,7 @@ const subsController: NewSubsController = {
 
   async formatSubs(req, res, next) {
     try {
-      if (res.locals.allSubs[0]) {
+      if (res.locals.message === ServerErrors.NONE && res.locals.allSubs[0]) {
         res.locals.formattedSubs = res.locals.allSubs.map(
           (subscription: DatabaseSubscription) => {
             return {

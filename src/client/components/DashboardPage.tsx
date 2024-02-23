@@ -10,6 +10,7 @@ import SubscriptionTable from './SubscriptionTable';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
+import ServerErrors from '../../server/models/serverErrors';
 
 interface Datasets {
   data: number[];
@@ -24,32 +25,22 @@ interface Chart {
 const DashboardPage = ({
   user,
   setUser,
-  currentSub,
   setCurrentSub,
   setIsLoggedIn
 }): JSX.Element => {
+  const emptyPieChart: Chart = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#05299E', '#06BEE1', '#FF7409', '#2DD881']
+      }
+    ]
+  };
+
+  const [totalSpentData, setTotalSpentData] = useState<Chart>(emptyPieChart);
+  const [pieChartData, setPieChartData] = useState<Chart>(emptyPieChart);
   const [subs, setSubs] = useState([]);
-  console.log('user on dashboard page', user);
-
-  const [totalSpentData, setTotalSpentData] = useState<Chart>({
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: []
-      }
-    ]
-  });
-
-  const [pieChartData, setPieChartData] = useState<Chart>({
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: []
-      }
-    ]
-  });
 
   const navigate = useNavigate();
 
@@ -58,16 +49,28 @@ const DashboardPage = ({
       const response = await fetch(
         `/subs/retrieveallsubs?userId=${user.userId}`
       );
+
       if (!response.ok) throw response;
+
       const data = await response.json();
-      if (data[0]) setSubs(data);
-      return data;
+
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        navigate('/');
+        return null;
+      } else if (data.hasOwnProperty('formattedSubs')) {
+        setSubs(data.formattedSubs);
+        return data.formattedSubs;
+      } else return [];
     } catch (error) {
       console.log('Error retrieving all user subscriptions');
     }
   };
 
-  const generatePieChartData = (subInfo: Subscription[], title, func) => {
+  const generatePieChartData = (
+    subInfo: Subscription[],
+    title: string,
+    func
+  ) => {
     const updatedPieChart: Chart = {
       labels: [],
       datasets: [
@@ -89,8 +92,13 @@ const DashboardPage = ({
 
   const loadPage = async () => {
     const data = await getSubscriptions();
-    generatePieChartData(data, 'monthlyFee', setPieChartData);
-    generatePieChartData(data, 'totalSpent', setTotalSpentData);
+
+    if (!data) {
+      setIsLoggedIn(false);
+    } else {
+      generatePieChartData(data, 'monthlyFee', setPieChartData);
+      generatePieChartData(data, 'totalSpent', setTotalSpentData);
+    }
   };
 
   useEffect(() => {

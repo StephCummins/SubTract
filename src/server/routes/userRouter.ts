@@ -6,7 +6,7 @@ userRouter.post(
   '/signup',
   userController.hashPassword,
   userController.addNewUser,
-  userController.setCookie,
+  userController.setToken,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.newUser);
   }
@@ -15,8 +15,8 @@ userRouter.post(
 userRouter.post(
   '/login',
   userController.login,
-  userController.authUser,
-  userController.setCookie,
+  userController.authPassword,
+  userController.setToken,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.userData);
   }

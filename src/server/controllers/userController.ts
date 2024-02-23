@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/db';
+import ServerErrors from '../models/serverErrors';
 import type JwtPayload from '../models/JwtPayloadInterface';
 import type ErrorMessage from '../models/errorInterface';
 import dotenv from 'dotenv';
@@ -9,10 +10,11 @@ dotenv.config();
 
 interface NewUserController {
   addNewUser(req: Request, res: Response, next: NextFunction): any;
-  setCookie(req: Request, res: Response, next: NextFunction): any;
+  setToken(req: Request, res: Response, next: NextFunction): any;
+  authUserToken(req: Request, res: Response, next: NextFunction): any;
   login(req: Request, res: Response, next: NextFunction): any;
   hashPassword(req: Request, res: Response, next: NextFunction): any;
-  authUser(req: Request, res: Response, next: NextFunction): any;
+  authPassword(req: Request, res: Response, next: NextFunction): any;
   checkUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
   logout(req: Request, res: Response, next: NextFunction): any;
@@ -46,7 +48,7 @@ const userController: NewUserController = {
     }
   },
 
-  async setCookie(req, res, next) {
+  async setToken(req, res, next) {
     try {
       const id = res.locals.userData
         ? res.locals.userData.user_id
@@ -66,6 +68,43 @@ const userController: NewUserController = {
       const message: ErrorMessage = {
         log: 'Error at userController.setCookie',
         message: { error: 'Error setting cookie' }
+      };
+      return next(message);
+    }
+  },
+
+  async authUserToken(req, res, next) {
+    try {
+      const { token } = req.cookies;
+
+      res.locals.message = token
+        ? ServerErrors.NONE
+        : ServerErrors.USER_NOT_AUTHENTICATED;
+
+      if (token) {
+        const payload = jwt.verify(
+          token,
+          process.env.JWT_SECRET_KEY!
+        ) as JwtPayload;
+
+        if (!payload) res.locals.message = ServerErrors.USER_NOT_AUTHENTICATED;
+        else {
+          const checkForInactiveToken = `SELECT * FROM inactivejwt WHERE tokenname = $1`;
+          const queryParamOne = [token];
+          const inactive: any = await db.query(
+            checkForInactiveToken,
+            queryParamOne
+          );
+          if (inactive.rows[0])
+            res.locals.message = ServerErrors.USER_NOT_AUTHENTICATED;
+        }
+      }
+
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.authUserToken',
+        message: { error: 'Error authenticating user token' }
       };
       return next(message);
     }
@@ -113,7 +152,7 @@ const userController: NewUserController = {
     }
   },
 
-  async authUser(req, res, next) {
+  async authPassword(req, res, next) {
     try {
       const { password } = req.body;
 
@@ -152,27 +191,30 @@ const userController: NewUserController = {
   async checkIfLoggedIn(req, res, next) {
     try {
       const { token } = req.cookies;
-      const payload = jwt.verify(
-        token,
-        process.env.JWT_SECRET_KEY!
-      ) as JwtPayload;
 
-      if (payload) {
-        const inactiveToken = `SELECT * FROM inactivejwt WHERE tokenname = $1`;
-        const queryParamOne = [token];
-        const inactive: any = await db.query(inactiveToken, queryParamOne);
+      if (token) {
+        const payload = jwt.verify(
+          token,
+          process.env.JWT_SECRET_KEY!
+        ) as JwtPayload;
 
-        if (!inactive.rows[0]) {
-          const loginData = `SELECT * FROM users WHERE user_id = $1`;
-          const queryParam = [payload.id];
-          const response: any = await db.query(loginData, queryParam);
-          res.locals.userData = response.rows[0];
+        if (payload) {
+          const inactiveToken = `SELECT * FROM inactivejwt WHERE tokenname = $1`;
+          const queryParamOne = [token];
+          const inactive: any = await db.query(inactiveToken, queryParamOne);
+
+          if (!inactive.rows[0]) {
+            const loginData = `SELECT * FROM users WHERE user_id = $1`;
+            const queryParam = [payload.id];
+            const response: any = await db.query(loginData, queryParam);
+            res.locals.userData = response.rows[0];
+          } else {
+            res.locals.userData = undefined;
+          }
         } else {
           res.locals.userData = undefined;
         }
-      } else {
-        res.locals.userData = undefined;
-      }
+      } else res.locals.userData = undefined;
 
       return next();
     } catch (error) {
@@ -196,6 +238,8 @@ const userController: NewUserController = {
         const inactiveJWT = `INSERT INTO inactivejwt (tokenname) VALUES($1)`;
         const queryParam = [token];
         await db.query(inactiveJWT, queryParam);
+        res.clearCookie('token');
+        console.log(res.cookie);
       }
 
       return next();

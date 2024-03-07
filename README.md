@@ -6,6 +6,7 @@ Subtract is a subscription tracking application designed to help consumers take 
 
 - Secure User Authentication via Google OAuth, JSON Web Tokens, and Bcrypt for Password Hashing
 - REST API for efficient client-server communication with Node.js and Express
+- ACID-compliant SQL Database integrated with Node.js Express server for streamlined queries and data retrieval
 - Interactive user interface designed with reusable components leveraging React's component-based architecture
 - Responsive Design for a seamless user experience across devices of all sizes
 

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/db';
-
+import FileTransfer from '../aws/s3';
 import ServerErrors from '../models/ServerErrors';
 import type JwtPayload from '../models/JwtPayloadInterface';
 import type ErrorMessage from '../models/errorInterface';
@@ -207,8 +207,22 @@ const userController: NewUserController = {
     console.log('In uploadAvatar middleware!');
     if (req.body.error) return res.status(400).redirect('/error');
     const file = req.file;
-    console.log(req.body);
-    console.log(req.file);
+
+    try {
+      const result = await FileTransfer.uploadFile(file);
+
+      const imageLocation = result.Key;
+
+      console.log(imageLocation);
+
+      // const addToDB = await addOrUpdateFloof(newFloof);
+      // const addID = await addToIdTable({id: newId});
+      // res.status(200).redirect('/');
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ err: 'Error adding floof.' });
+    }
+
     return next();
   },
 

@@ -194,7 +194,11 @@ const AccountPage = ({
             </Grid>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link onClick={() => navigate('/delete')} variant="body2">
+                <Link
+                  onClick={() => navigate('/delete')}
+                  variant="body2"
+                  sx={{ cursor: 'pointer' }}
+                >
                   Delete Account
                 </Link>
               </Grid>

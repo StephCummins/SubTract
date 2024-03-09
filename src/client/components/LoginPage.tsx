@@ -210,10 +210,16 @@ const LoginPage = ({
                 Sign In
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
+                <Grid
+                  item
+                  xs
+                  sx={{
+                    mb: 5
+                  }}
+                >
+                  {/* <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </Grid>
                 {userError === UserErrors.LOGIN_ERROR && (
                   <Grid item sx={{ alignItems: 'left' }}>

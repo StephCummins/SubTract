@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -25,6 +26,8 @@ const AccountPage = ({
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState(user.password);
+  const [buttonColor, setButtonColor] = useState('#219EBC');
+  const [buttonText, setButtonText] = useState('click to upload');
 
   const navigate = useNavigate();
 
@@ -32,6 +35,11 @@ const AccountPage = ({
     e.preventDefault();
 
     setUserError(UserErrors.NONE);
+
+    if (!firstName || !lastName || !email || !password) {
+      setUserError(UserErrors.INCOMPLETE_CREDENTIALS);
+      return;
+    }
 
     const updatedUser = {
       userId: user.userId,
@@ -66,6 +74,11 @@ const AccountPage = ({
     } catch (error) {
       console.log('Error updating account!', error);
     }
+  };
+
+  const handleSubmitImage = async () => {
+    setButtonColor('#FF4F00');
+    setButtonText('upload successful');
   };
 
   return (
@@ -142,6 +155,33 @@ const AccountPage = ({
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <Avatar alt="" src={user.picture} />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <form
+                  action="/user/uploadavatar"
+                  method="post"
+                  encType="multipart/form-data"
+                >
+                  <section className="formElements">
+                    <section className="uploadImage">
+                      <div className="labels">
+                        <label>Upload New Avatar:</label>
+                        <input type="file" name="userAvatar" required />
+                        <input type="hidden" name={user.userId} />
+                      </div>
+                    </section>
+                    <button
+                      style={{ backgroundColor: buttonColor }}
+                      onClick={() => handleSubmitImage()}
+                      className="uploadBtn"
+                    >
+                      {buttonText}
+                    </button>
+                  </section>
+                </form>
+              </Grid>
             </Grid>
             <Grid
               sx={{
@@ -192,7 +232,7 @@ const AccountPage = ({
                 Cancel
               </Button>
             </Grid>
-            <Grid container justifyContent="flex-end">
+            <Grid container flexDirection="column" alignItems="flex-end">
               <Grid item>
                 <Link
                   onClick={() => navigate('/delete')}
@@ -202,17 +242,10 @@ const AccountPage = ({
                   Delete Account
                 </Link>
               </Grid>
-              {userError === UserErrors.DUPLICATE_USER && (
-                <Grid item sx={{ alignItems: 'left' }}>
-                  <Typography sx={{ color: 'red' }}>
-                    <strong>SubTract account already exists. Login.</strong>
-                  </Typography>
-                </Grid>
-              )}
               {userError === UserErrors.INCOMPLETE_CREDENTIALS && (
                 <Grid item sx={{ alignItems: 'left' }}>
                   <Typography sx={{ color: 'red' }}>
-                    <strong>All fields required to create account.</strong>
+                    <strong>All fields required.</strong>
                   </Typography>
                 </Grid>
               )}

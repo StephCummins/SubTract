@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from '../database/db';
+
 import ServerErrors from '../models/ServerErrors';
 import type JwtPayload from '../models/JwtPayloadInterface';
 import type ErrorMessage from '../models/errorInterface';
@@ -16,6 +17,7 @@ interface NewUserController {
   hashPassword(req: Request, res: Response, next: NextFunction): any;
   authPassword(req: Request, res: Response, next: NextFunction): any;
   updateUserAccount(req: Request, res: Response, next: NextFunction): any;
+  uploadAvatar(req: Request, res: Response, next: NextFunction): any;
   checkUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
   logout(req: Request, res: Response, next: NextFunction): any;
@@ -199,6 +201,15 @@ const userController: NewUserController = {
       };
       return next(message);
     }
+  },
+
+  async uploadAvatar(req, res, next) {
+    console.log('In uploadAvatar middleware!');
+    if (req.body.error) return res.status(400).redirect('/error');
+    const file = req.file;
+    console.log(req.body);
+    console.log(req.file);
+    return next();
   },
 
   async checkUserAccount(req, res, next) {

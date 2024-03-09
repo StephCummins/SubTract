@@ -5,6 +5,8 @@ import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import UpdateSubPage from './UpdateSubPage';
 import AddNewSubPage from './AddNewSubPage';
+import AccountPage from './AccountPage';
+import DeleteAccountPage from './DeleteAccountPage';
 import UserErrors from '../models/UserErrors';
 import type User from '../models/userInterface';
 import type Subscription from '../models/subscriptionInterface';
@@ -147,6 +149,28 @@ const App = (): JSX.Element => {
         path="/add"
         element={
           <AddNewSubPage
+            user={user}
+            setUser={setUser}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <AccountPage
+            user={user}
+            setUser={handleSetUser}
+            setIsLoggedIn={setIsLoggedIn}
+            userError={userError}
+            setUserError={setUserError}
+          />
+        }
+      />
+      <Route
+        path="/deleteaccount"
+        element={
+          <DeleteAccountPage
             user={user}
             setUser={setUser}
             setIsLoggedIn={setIsLoggedIn}

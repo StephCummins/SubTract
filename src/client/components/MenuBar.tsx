@@ -14,7 +14,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 
-const settings = ['Logout'];
+const settings = ['Account Info', 'Logout'];
 
 const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -33,6 +33,7 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
 
   const handleMenuClick = (menuItem) => {
     if (menuItem === 'Logout') handleLogOut();
+    if (menuItem === 'Account Info') handleAccountInfo();
   };
 
   const handleLogOut = async () => {
@@ -66,6 +67,10 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
       dateCreated: null
     };
     setUser(emptyUserInfo);
+  };
+
+  const handleAccountInfo = () => {
+    navigate('/account');
   };
 
   const stringAvatar = (

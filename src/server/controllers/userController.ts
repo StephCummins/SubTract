@@ -15,6 +15,7 @@ interface NewUserController {
   login(req: Request, res: Response, next: NextFunction): any;
   hashPassword(req: Request, res: Response, next: NextFunction): any;
   authPassword(req: Request, res: Response, next: NextFunction): any;
+  updateUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
   logout(req: Request, res: Response, next: NextFunction): any;
@@ -165,6 +166,33 @@ const userController: NewUserController = {
       const message: ErrorMessage = {
         log: 'Error at userController.authUser',
         message: { error: 'Error authenticating user' }
+      };
+      return next(message);
+    }
+  },
+
+  async updateUserAccount(req, res, next) {
+    try {
+      const user = req.body;
+
+      const updatedUserData = `UPDATE users SET first_name = $1, last_name = $2, 
+                               email = $3, password = $4 WHERE user_id = $5 RETURNING *`;
+
+      const queryParams = [
+        user.firstName,
+        user.lastName,
+        user.email,
+        res.locals.password,
+        user.userId
+      ];
+
+      const response: any = await db.query(updatedUserData, queryParams);
+      res.locals.userData = response.rows[0];
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.updateUserAccount',
+        message: { error: 'Error updating user account' }
       };
       return next(message);
     }

@@ -69,7 +69,6 @@ const updateSubPage = ({
     setCurrentSub(updatedSub);
 
     try {
-      console.log('updatedSub', updatedSub);
       const response = await fetch('/subs/editsub', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

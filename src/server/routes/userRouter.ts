@@ -56,4 +56,14 @@ userRouter.post(
   }
 );
 
+userRouter.delete(
+  '/deleteaccount',
+  userController.authUserToken,
+  userController.deleteAccount,
+  userController.logout,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send('Deleted Account!');
+  }
+);
+
 export default userRouter;

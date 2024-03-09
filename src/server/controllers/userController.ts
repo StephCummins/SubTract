@@ -19,6 +19,7 @@ interface NewUserController {
   checkUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
   logout(req: Request, res: Response, next: NextFunction): any;
+  deleteAccount(req: Request, res: Response, next: NextFunction): any;
 }
 
 const userController: NewUserController = {
@@ -26,7 +27,9 @@ const userController: NewUserController = {
     try {
       const user = req.body;
 
-      const newUserData = `INSERT INTO users (first_name, last_name, email, password, google_auth, picture) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`;
+      const newUserData = `INSERT INTO users (first_name, last_name, 
+                           email, password, google_auth, picture) 
+                           VALUES($1, $2, $3, $4, $5, $6) RETURNING *`;
 
       const queryParams = [
         user.firstName,
@@ -273,6 +276,26 @@ const userController: NewUserController = {
       const message: ErrorMessage = {
         log: 'Error at userController.logout',
         message: { error: 'Error logging out user' }
+      };
+      return next(message);
+    }
+  },
+
+  async deleteAccount(req, res, next) {
+    try {
+      if (res.locals.message === ServerErrors.NONE) {
+        const { userId } = req.body;
+
+        const deleteAccount = `DELETE FROM users WHERE user_id = $1`;
+        const queryParams = [userId];
+
+        await db.query(deleteAccount, queryParams);
+      }
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.deleteAccount',
+        message: { error: 'Error deleting user account' }
       };
       return next(message);
     }

@@ -38,7 +38,6 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
 
   const handleLogOut = async () => {
     try {
-      console.log('Before the fetch request!');
       const response = await fetch('/user/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +50,7 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
       setIsLoggedIn(false);
       navigate('/');
     } catch (error) {
-      console.log(error, 'ERROR WITH FETCH REQUEST!');
+      console.log(error, 'Error logging user out');
     }
   };
 

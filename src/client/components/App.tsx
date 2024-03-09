@@ -168,7 +168,7 @@ const App = (): JSX.Element => {
         }
       />
       <Route
-        path="/deleteaccount"
+        path="/delete"
         element={
           <DeleteAccountPage
             user={user}

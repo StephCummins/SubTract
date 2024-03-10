@@ -33,12 +33,20 @@ userRouter.patch(
   }
 );
 
+// userRouter.get(
+//   '/loadtempavatar',
+//   userController.loadTempAvatar,
+//   (req: Request, res: Response, next: NextFunction) => {
+//     return res.status(200).send('Image loaded');
+//   }
+// );
+
 userRouter.post(
   '/uploadavatar',
-  upload.single('userAvatar'),
+  upload.single('image'),
   userController.uploadAvatar,
   (req: Request, res: Response, next: NextFunction) => {
-    return res.status(200).send('AVATAR UPDATED!');
+    return res.status(200).send(res.locals.updatedUser);
   }
 );
 

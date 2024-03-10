@@ -18,6 +18,7 @@ interface NewUserController {
   authPassword(req: Request, res: Response, next: NextFunction): any;
   updateUserAccount(req: Request, res: Response, next: NextFunction): any;
   uploadAvatar(req: Request, res: Response, next: NextFunction): any;
+  loadTempAvatar(req: Request, res: Response, next: NextFunction): any;
   checkUserAccount(req: Request, res: Response, next: NextFunction): any;
   checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
   logout(req: Request, res: Response, next: NextFunction): any;
@@ -204,26 +205,48 @@ const userController: NewUserController = {
   },
 
   async uploadAvatar(req, res, next) {
-    console.log('In uploadAvatar middleware!');
     if (req.body.error) return res.status(400).redirect('/error');
     const file = req.file;
+    const { userId } = req.body;
 
     try {
       const result = await FileTransfer.uploadFile(file);
+      const imageLocation = result.Location;
 
-      const imageLocation = result.Key;
+      const updatedImageData = `UPDATE users SET picture = $1 
+                                WHERE user_id = $2 RETURNING *`;
 
-      console.log(imageLocation);
+      const queryParams = [imageLocation, userId];
 
-      // const addToDB = await addOrUpdateFloof(newFloof);
-      // const addID = await addToIdTable({id: newId});
-      // res.status(200).redirect('/');
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ err: 'Error adding floof.' });
+      const response: any = await db.query(updatedImageData, queryParams);
+
+      res.locals.updatedUser = response.rows[0];
+
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.uploadAvatar',
+        message: { error: 'Error updating user avatar' }
+      };
+      return next(message);
     }
+  },
 
-    return next();
+  async loadTempAvatar(req, res, next) {
+    try {
+      const key = req.query.key;
+      const readStream = FileTransfer.getFile(key);
+      console.log(readStream);
+      readStream.pipe(res);
+
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at userController.loadAvatar',
+        message: { error: 'Error loading user avatar' }
+      };
+      return next(message);
+    }
   },
 
   async checkUserAccount(req, res, next) {

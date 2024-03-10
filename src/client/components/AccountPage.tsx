@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -76,11 +75,6 @@ const AccountPage = ({
     }
   };
 
-  const handleSubmitImage = async () => {
-    setButtonColor('#FF4F00');
-    setButtonText('upload successful');
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -154,33 +148,6 @@ const AccountPage = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Avatar alt="" src={user.picture} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <form
-                  action="/user/uploadavatar"
-                  method="post"
-                  encType="multipart/form-data"
-                >
-                  <section className="formElements">
-                    <section className="uploadImage">
-                      <div className="labels">
-                        <label>Upload New Avatar:</label>
-                        <input type="file" name="userAvatar" required />
-                        <input type="hidden" name={user.userId} />
-                      </div>
-                    </section>
-                    <button
-                      style={{ backgroundColor: buttonColor }}
-                      onClick={() => handleSubmitImage()}
-                      className="uploadBtn"
-                    >
-                      {buttonText}
-                    </button>
-                  </section>
-                </form>
               </Grid>
             </Grid>
             <Grid

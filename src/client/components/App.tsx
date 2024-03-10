@@ -6,6 +6,7 @@ import DashboardPage from './DashboardPage';
 import UpdateSubPage from './UpdateSubPage';
 import AddNewSubPage from './AddNewSubPage';
 import AccountPage from './AccountPage';
+import UpdateAvatarPage from './UpdateAvatarPage';
 import DeleteAccountPage from './DeleteAccountPage';
 import UserErrors from '../models/UserErrors';
 import type User from '../models/userInterface';
@@ -159,6 +160,18 @@ const App = (): JSX.Element => {
         path="/account"
         element={
           <AccountPage
+            user={user}
+            setUser={handleSetUser}
+            setIsLoggedIn={setIsLoggedIn}
+            userError={userError}
+            setUserError={setUserError}
+          />
+        }
+      />
+      <Route
+        path="/updateavatar"
+        element={
+          <UpdateAvatarPage
             user={user}
             setUser={handleSetUser}
             setIsLoggedIn={setIsLoggedIn}

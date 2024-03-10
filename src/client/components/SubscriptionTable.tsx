@@ -235,12 +235,21 @@ const SubscriptionTable = ({
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleEdit(subscription.subId)}>
-                    <EditIcon />
+                    <EditIcon
+                      color="primary"
+                      style={{
+                        fontSize: 'large'
+                      }}
+                    />
                   </IconButton>
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleDelete(subscription.subId)}>
-                    <DeleteForeverIcon />
+                    <DeleteForeverIcon
+                      style={{
+                        color: 'red'
+                      }}
+                    />
                   </IconButton>
                 </TableCell>
               </TableRow>

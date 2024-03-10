@@ -99,6 +99,32 @@ const App = (): JSX.Element => {
     }
   };
 
+  const updateTotalSpent = (sub) => {
+    if (
+      !sub.signupDate ||
+      !sub.freeTrial ||
+      !sub.dateFreeTrialEnds ||
+      !sub.monthlyFee
+    )
+      return 0;
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+
+    let months = 0;
+    const startDate = sub.freeTrial
+      ? new Date(sub.dateFreeTrialEnds)
+      : new Date(sub.signupDate);
+    months = (currentYear - startDate.getFullYear()) * 12;
+    months -= startDate.getMonth();
+    months += currentMonth;
+
+    const totalSpent = sub.monthlyFee * months;
+
+    return totalSpent < 0 ? 0 : totalSpent;
+  };
+
   return (
     <Routes>
       <Route
@@ -153,6 +179,7 @@ const App = (): JSX.Element => {
             user={user}
             setUser={setUser}
             setIsLoggedIn={setIsLoggedIn}
+            updateTotalSpent={updateTotalSpent}
           />
         }
       />

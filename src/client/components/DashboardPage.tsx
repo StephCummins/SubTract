@@ -59,8 +59,9 @@ const DashboardPage = ({
         navigate('/');
         return null;
       } else if (data.hasOwnProperty('formattedSubs')) {
-        setSubs(data.formattedSubs);
-        return data.formattedSubs;
+        const updatedTotals = updateTotalSpent(data.formattedSubs);
+        setSubs(updatedTotals);
+        return updatedTotals;
       } else return [];
     } catch (error) {
       console.log('Error retrieving all user subscriptions', error);
@@ -89,6 +90,27 @@ const DashboardPage = ({
     });
 
     func(updatedPieChart);
+  };
+
+  const updateTotalSpent = (subs) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+
+    subs.forEach((sub) => {
+      let months = 0;
+      const startDate = sub.freeTrial
+        ? new Date(sub.dateFreeTrialEnds)
+        : new Date(sub.signupDate);
+      months = (currentYear - startDate.getFullYear()) * 12;
+      months -= startDate.getMonth();
+      months += currentMonth;
+
+      const totalSpent = sub.monthlyFee * months;
+      sub.totalSpent = totalSpent < 0 ? 0 : totalSpent;
+    });
+
+    return subs;
   };
 
   const loadPage = async () => {

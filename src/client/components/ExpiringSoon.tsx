@@ -10,39 +10,6 @@ import theme from './MaterialUITheme';
 import type Subscription from '../models/subscriptionInterface';
 
 const ExpiringSoon = ({ expiringSoon }): JSX.Element => {
-  // const [subsExpiring, setSubsExpiring] = useState<(string | number)[][]>([]);
-
-  // useEffect(() => {
-  //   loadExpiringSoon(subs);
-  // }, [subs]);
-
-  // const currentTime = new Date().getTime();
-
-  // const loadExpiringSoon = (subs: Subscription[]) => {
-  //   const freeTrialEnds: (string | number)[][] = [];
-
-  //   subs.forEach((sub: Subscription) => {
-  //     if (sub.freeTrial) {
-  //       const endDate = new Date(sub.dateFreeTrialEnds!);
-  //       const timeDifference = endDate.getTime() - currentTime;
-  //       const dayDifference = Math.round(
-  //         timeDifference / (1000 * 60 * 60 * 24)
-  //       );
-
-  //       if (dayDifference >= 0 && dayDifference <= 60) {
-  //         const endingSoon: (string | number)[] = [
-  //           sub.name,
-  //           dayDifference,
-  //           sub.monthlyFee!
-  //         ];
-  //         freeTrialEnds.push(endingSoon);
-  //       }
-  //     }
-
-  //     setSubsExpiring(freeTrialEnds);
-  //   });
-  // };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -67,39 +34,12 @@ const ExpiringSoon = ({ expiringSoon }): JSX.Element => {
                     }}
                   />
                 </ListItemIcon>
-                {sub[0]} is expiring in: {sub[1]} day(s) | Upcoming monthly fee:
-                $ {sub[2]}
+                {sub[0]} free trial expiring in: {sub[1]} day(s) | Upcoming
+                monthly fee: $ {sub[2]}
               </ListItem>
             );
           })}
-        {/* {subsExpiring.length > 0 &&
-          subsExpiring.map((sub: (string | number)[], idx) => {
-            return (
-              <ListItem key={idx}>
-                <ListItemIcon>
-                  <PriorityHighIcon
-                    style={{
-                      color: 'red'
-                    }}
-                  />
-                </ListItemIcon>
-                {sub[0]} is expiring in: {sub[1]} day(s) | Upcoming monthly fee:
-                $ {sub[2]}
-              </ListItem>
-            );
-          })} */}
       </List>
-      {/* <ul>
-        {subsExpiring.length > 0 &&
-          subsExpiring.map((sub: (string | number)[], idx) => {
-            return (
-              <li key={idx}>
-                {sub[0]} is expiring in {sub[1]} day(s) | Upcoming monthly fee:
-                $ {sub[2]}
-              </li>
-            );
-          })}
-      </ul> */}
     </ThemeProvider>
   );
 };

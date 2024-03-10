@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -19,14 +20,19 @@ import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 import ServerErrors from '../../server/models/ServerErrors';
 
-const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
+const addNewSubPage = ({
+  user,
+  setUser,
+  setIsLoggedIn,
+  updateTotalSpent
+}): JSX.Element => {
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
   const [signupDate, setSignupDate] = useState('');
   const [monthlyFee, setMonthlyFee] = useState('');
   const [freeTrial, setFreeTrial] = useState('');
   const [dateFreeTrialEnds, setDateFreeTrialEnds] = useState('');
-  const [totalSpent, setTotalSpent] = useState('');
+  const [totalSpent, setTotalSpent] = useState('0');
 
   const navigate = useNavigate();
 
@@ -165,7 +171,6 @@ const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
               fullWidth
               label="Free Trial"
               value={freeTrial}
-              //defaultValue={freeTrial ? freeTrial : false}
               onChange={handleFreeTrialChange}
               sx={{ mt: 2 }}
             >
@@ -193,7 +198,15 @@ const addNewSubPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
               name="totalSpent"
               label="Total Spent"
               id="totalSpent"
-              value={totalSpent}
+              value={
+                0 ||
+                updateTotalSpent({
+                  signupDate,
+                  freeTrial,
+                  dateFreeTrialEnds,
+                  monthlyFee
+                })
+              }
               onChange={(e) => setTotalSpent(e.target.value)}
               InputProps={{
                 startAdornment: (

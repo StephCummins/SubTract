@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TableContainer } from '@mui/material';
 import Table from '@mui/material/Table';
@@ -7,6 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
@@ -14,6 +15,7 @@ import type Subscription from '../models/subscriptionInterface';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import IconButton from '@mui/material/IconButton';
+import ExpiringSoon from './ExpiringSoon';
 import ServerErrors from '../../server/models/ServerErrors';
 
 const SubscriptionTable = ({
@@ -24,6 +26,42 @@ const SubscriptionTable = ({
 }): JSX.Element => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [columnToSortBy, setColumnToSortBy] = useState('name');
+  const [subsExpiringData, setSubsExpiringData] = useState<
+    (string | number)[][]
+  >([]);
+  const [listOfExpiring, setListOfExpiring] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadExpiringSoon(subs);
+  }, [subs]);
+
+  const currentTime = new Date().getTime();
+
+  const loadExpiringSoon = (subs: Subscription[]) => {
+    const freeTrialEnds: (string | number)[][] = [];
+
+    subs.forEach((sub: Subscription) => {
+      if (sub.freeTrial) {
+        const endDate = new Date(sub.dateFreeTrialEnds!);
+        const timeDifference = endDate.getTime() - currentTime;
+        const dayDifference = Math.round(
+          timeDifference / (1000 * 60 * 60 * 24)
+        );
+
+        if (dayDifference >= 0 && dayDifference <= 60) {
+          const endingSoon: (string | number)[] = [
+            sub.name,
+            dayDifference,
+            sub.monthlyFee!
+          ];
+          freeTrialEnds.push(endingSoon);
+          setListOfExpiring(() => [...listOfExpiring, sub.name]);
+        }
+      }
+
+      setSubsExpiringData(freeTrialEnds);
+    });
+  };
 
   const navigate = useNavigate();
 
@@ -105,7 +143,7 @@ const SubscriptionTable = ({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <TableContainer
-        sx={{ width: { xs: 400, sm: 500, md: 600, lg: 1000, xl: 1200 } }}
+        sx={{ width: { xs: 400, sm: 500, md: 600, lg: 1000, xl: 1200 }, mb: 5 }}
       >
         <Table stickyHeader sx={{ width: 'max-content' }}>
           <TableHead>
@@ -171,7 +209,18 @@ const SubscriptionTable = ({
               getComparator(sortDirection, columnToSortBy)
             ).map((subscription: any) => (
               <TableRow key={subscription.subId} hover>
-                <TableCell>{subscription.name}</TableCell>
+                <TableCell>
+                  {listOfExpiring.includes(subscription.name) && (
+                    <PriorityHighIcon
+                      style={{
+                        color: 'red',
+                        fontSize: 'medium'
+                      }}
+                    />
+                  )}
+                  {subscription.name}
+                </TableCell>
+                {/* <TableCell>{subscription.name}</TableCell> */}
                 <TableCell>{`$${subscription.monthlyFee}`}</TableCell>
                 <TableCell>{subscription.signupDate.slice(0, 10)}</TableCell>
                 <TableCell>{subscription.freeTrial ? 'Yes' : 'No'}</TableCell>
@@ -199,6 +248,7 @@ const SubscriptionTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+      <ExpiringSoon expiringSoon={subsExpiringData} />
     </ThemeProvider>
   );
 };

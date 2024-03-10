@@ -20,33 +20,6 @@ const s3 = new S3({
   secretAccessKey
 });
 
-// upload a file to S3
-// function uploadFile(file) {
-//   const fileStream = fs.createReadStream(file.path);
-
-//   const uploadParams: Params = {
-//     Bucket: bucketName!,
-//     Body: fileStream!,
-//     Key: file.filename
-//   };
-
-//   return s3.upload(uploadParams).promise();
-// }
-
-// exports.uploadFile = uploadFile;
-
-// // download a file from S3
-// function getFile(fileKey) {
-//   const downloadParams: Params = {
-//     Key: fileKey,
-//     Bucket: bucketName!
-//   };
-
-//   return s3.getObject(downloadParams).createReadStream();
-// }
-
-// exports.getFile = getFile;
-
 const FileTransfer = {
   uploadFile(file) {
     const fileStream = fs.createReadStream(file.path);

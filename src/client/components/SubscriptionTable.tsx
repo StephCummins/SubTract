@@ -161,7 +161,7 @@ const SubscriptionTable = ({
                   case 'Start Date':
                     keyName = 'signupDate';
                     break;
-                  case 'Free Trial':
+                  case 'Free Trial End Date':
                     keyName = 'freeTrial';
                     break;
                   case 'End Date':

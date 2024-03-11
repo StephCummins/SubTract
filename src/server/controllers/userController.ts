@@ -139,7 +139,7 @@ const userController: NewUserController = {
 
   hashPassword(req, res, next) {
     try {
-      const { password } = req.body;
+      let { password } = req.body;
       const saltRounds = 10;
 
       bcrypt.hash(password, saltRounds, (err, hash) => {
@@ -166,6 +166,7 @@ const userController: NewUserController = {
         password,
         res.locals.userData.password
       );
+
       if (!result) throw new Error('Invalid login credentials!');
       else return next();
     } catch (error) {
@@ -180,6 +181,21 @@ const userController: NewUserController = {
   async updateUserAccount(req, res, next) {
     try {
       const user = req.body;
+      res.locals.password = user.password;
+
+      if (req.body.newPassword !== '') {
+        user.password = req.body.newPassword;
+
+        const saltRounds = 10;
+
+        bcrypt.hash(user.password, saltRounds, (err, hash) => {
+          if (err) throw new Error('bcrypt hashing error');
+          else {
+            res.locals.password = hash;
+            return next();
+          }
+        });
+      }
 
       const updatedUserData = `UPDATE users SET first_name = $1, last_name = $2, 
                                email = $3, password = $4 WHERE user_id = $5 RETURNING *`;

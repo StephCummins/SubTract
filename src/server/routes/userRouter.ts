@@ -26,20 +26,11 @@ userRouter.post(
 userRouter.patch(
   '/updateaccount',
   userController.authUserToken,
-  userController.hashPassword,
   userController.updateUserAccount,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.userData);
   }
 );
-
-// userRouter.get(
-//   '/loadtempavatar',
-//   userController.loadTempAvatar,
-//   (req: Request, res: Response, next: NextFunction) => {
-//     return res.status(200).send('Image loaded');
-//   }
-// );
 
 userRouter.post(
   '/uploadavatar',

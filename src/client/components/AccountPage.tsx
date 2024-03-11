@@ -24,7 +24,7 @@ const AccountPage = ({
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
-  const [password, setPassword] = useState(user.password);
+  const [password, setPassword] = useState('');
   const [buttonColor, setButtonColor] = useState('#219EBC');
   const [buttonText, setButtonText] = useState('click to upload');
 
@@ -35,7 +35,7 @@ const AccountPage = ({
 
     setUserError(UserErrors.NONE);
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email) {
       setUserError(UserErrors.INCOMPLETE_CREDENTIALS);
       return;
     }
@@ -45,10 +45,11 @@ const AccountPage = ({
       firstName,
       lastName,
       email,
-      password,
+      password: user.password,
       googleAuth: user.googleAuth,
       picture: user.picture,
-      dateCreated: user.dateCreated
+      dateCreated: user.dateCreated,
+      newPassword: password
     };
 
     try {
@@ -139,10 +140,9 @@ const AccountPage = ({
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="New Password"
                   type="password"
                   id="password"
                   value={password}
@@ -212,7 +212,7 @@ const AccountPage = ({
               {userError === UserErrors.INCOMPLETE_CREDENTIALS && (
                 <Grid item sx={{ alignItems: 'left' }}>
                   <Typography sx={{ color: 'red' }}>
-                    <strong>All fields required.</strong>
+                    <strong>Please Fill Out All Required Fields</strong>
                   </Typography>
                 </Grid>
               )}

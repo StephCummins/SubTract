@@ -195,8 +195,6 @@ const App = (): JSX.Element => {
             user={user}
             setUser={handleSetUser}
             setIsLoggedIn={setIsLoggedIn}
-            userError={userError}
-            setUserError={setUserError}
           />
         }
       />

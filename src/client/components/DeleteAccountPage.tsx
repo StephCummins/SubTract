@@ -55,7 +55,7 @@ const DeleteAccountPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
-            marginTop: 8,
+            mt: 15,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'

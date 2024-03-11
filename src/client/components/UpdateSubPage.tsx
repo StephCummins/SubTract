@@ -37,8 +37,9 @@ const updateSubPage = ({
   const [dateFreeTrialEnds, setDateFreeTrialEnds] = useState(
     currentSub.dateFreeTrialEnds
   );
-  const [autoCalc, setAutoCalc] = useState('');
+  const [autoCalc, setAutoCalc] = useState(currentSub.autoCalc);
   const [totalSpent, setTotalSpent] = useState(currentSub.totalSpent);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -60,6 +61,13 @@ const updateSubPage = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(false);
+
+    if (!name || !signupDate || !monthlyFee) {
+      setError(true);
+      return;
+    }
+
     const updatedSub = {
       subId: currentSub.subId,
       userId: currentSub.userId,
@@ -69,7 +77,7 @@ const updateSubPage = ({
       monthlyFee: parseInt(monthlyFee),
       freeTrial,
       dateFreeTrialEnds: dateFreeTrialEnds === '' ? null : dateFreeTrialEnds,
-      totalSpent: parseInt(totalSpent),
+      totalSpent: totalSpent === '' ? 0 : parseInt(totalSpent),
       autoCalc
     };
 
@@ -336,6 +344,13 @@ const updateSubPage = ({
                 Cancel
               </Button>
             </Grid>
+            {error && (
+              <Grid item sx={{ alignItems: 'left' }}>
+                <Typography sx={{ color: 'red' }}>
+                  <strong>Please Fill Out All Required Fields</strong>
+                </Typography>
+              </Grid>
+            )}
           </Box>
         </Grid>
       </Container>

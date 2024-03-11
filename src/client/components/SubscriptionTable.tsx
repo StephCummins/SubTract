@@ -132,7 +132,7 @@ const SubscriptionTable = ({
     'Monthly Fee',
     'Start Date',
     'Free Trial',
-    'End Date',
+    'Free Trial End Date',
     'Total Spent',
     'Website',
     'Edit',
@@ -143,7 +143,7 @@ const SubscriptionTable = ({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <TableContainer
-        sx={{ width: { xs: 400, sm: 500, md: 600, lg: 1000, xl: 1200 }, mb: 5 }}
+        sx={{ width: { xs: 400, sm: 500, md: 600, lg: 1100, xl: 1400 }, mb: 5 }}
       >
         <Table stickyHeader sx={{ width: 'max-content' }}>
           <TableHead>

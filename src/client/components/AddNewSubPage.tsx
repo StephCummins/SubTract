@@ -57,7 +57,7 @@ const addNewSubPage = ({
     e.preventDefault();
     setError(false);
 
-    if (!name || !signupDate || !monthlyFee || !totalSpent) {
+    if (!name || !signupDate || !monthlyFee) {
       setError(true);
       return;
     }
@@ -70,7 +70,7 @@ const addNewSubPage = ({
       monthlyFee: parseInt(monthlyFee),
       freeTrial: freeTrial === '' ? false : freeTrial,
       dateFreeTrialEnds: dateFreeTrialEnds === '' ? null : dateFreeTrialEnds,
-      totalSpent: parseInt(totalSpent),
+      totalSpent: totalSpent === '' ? 0 : parseInt(totalSpent),
       autoCalc: autoCalc === '' ? false : autoCalc
     };
 

@@ -41,8 +41,8 @@ const subsController: NewSubsController = {
 
         const newSubData = `INSERT INTO subscriptions (user_id, name, 
                             website, signup_date, monthly_fee, free_trial, 
-                            date_free_trial_ends, total_spent) VALUES($1, 
-                            $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+                            date_free_trial_ends, total_spent, auto_calc_free_trial) 
+                            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
 
         const queryParams = [
           sub.userId,
@@ -52,7 +52,8 @@ const subsController: NewSubsController = {
           sub.monthlyFee,
           sub.freeTrial,
           sub.dateFreeTrialEnds,
-          sub.totalSpent
+          sub.totalSpent,
+          sub.autoCalc
         ];
 
         const response: any = await db.query(newSubData, queryParams);
@@ -78,8 +79,8 @@ const subsController: NewSubsController = {
                                 website = $2, signup_date = $3, 
                                 monthly_fee = $4, free_trial = $5, 
                                 date_free_trial_ends = $6, 
-                                total_spent = $7 WHERE 
-                                subscription_id = $8`;
+                                total_spent = $7, auto_calc_free_trial = $8 
+                                WHERE subscription_id = $9`;
 
         const queryParams = [
           updatedSub.name,
@@ -89,6 +90,7 @@ const subsController: NewSubsController = {
           updatedSub.freeTrial,
           updatedSub.dateFreeTrialEnds,
           updatedSub.totalSpent,
+          updatedSub.autoCalc,
           updatedSub.subId
         ];
 
@@ -140,7 +142,8 @@ const subsController: NewSubsController = {
               monthlyFee: subscription.monthly_fee,
               freeTrial: subscription.free_trial,
               dateFreeTrialEnds: subscription.date_free_trial_ends,
-              totalSpent: subscription.total_spent
+              totalSpent: subscription.total_spent,
+              autoCalc: subscription.auto_calc_free_trial
             };
           }
         );

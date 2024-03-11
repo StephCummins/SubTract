@@ -24,7 +24,8 @@ const updateSubPage = ({
   setCurrentSub,
   user,
   setUser,
-  setIsLoggedIn
+  setIsLoggedIn,
+  updateTotalSpent
 }): JSX.Element => {
   const [name, setName] = useState(currentSub.name);
   const [website, setWebsite] = useState(currentSub.website);
@@ -36,6 +37,7 @@ const updateSubPage = ({
   const [dateFreeTrialEnds, setDateFreeTrialEnds] = useState(
     currentSub.dateFreeTrialEnds
   );
+  const [autoCalc, setAutoCalc] = useState('');
   const [totalSpent, setTotalSpent] = useState(currentSub.totalSpent);
 
   const navigate = useNavigate();
@@ -52,6 +54,10 @@ const updateSubPage = ({
     setFreeTrial(e.target.value);
   };
 
+  const handleAutoCalc = (e) => {
+    setAutoCalc(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const updatedSub = {
@@ -63,7 +69,8 @@ const updateSubPage = ({
       monthlyFee: parseInt(monthlyFee),
       freeTrial,
       dateFreeTrialEnds: dateFreeTrialEnds === '' ? null : dateFreeTrialEnds,
-      totalSpent: parseInt(totalSpent)
+      totalSpent: parseInt(totalSpent),
+      autoCalc
     };
 
     setCurrentSub(updatedSub);
@@ -115,6 +122,7 @@ const updateSubPage = ({
               px: 5,
               my: 5,
               mx: 5,
+              mt: 15,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -207,8 +215,62 @@ const updateSubPage = ({
                 />
               </LocalizationProvider>
             )}
-
             <TextField
+              id="automaticallycalctotal"
+              select
+              fullWidth
+              label="Automatically Calculate Total Spent?"
+              value={autoCalc}
+              onChange={handleAutoCalc}
+              sx={{ mt: 2 }}
+            >
+              <MenuItem value={true as any}>Yes</MenuItem>
+              <MenuItem value={false as any}>No</MenuItem>
+            </TextField>
+            {!autoCalc && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="totalSpent"
+                label="Total Spent"
+                id="totalSpent"
+                value={totalSpent}
+                onChange={(e) => setTotalSpent(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  )
+                }}
+              >
+                {totalSpent}
+              </TextField>
+            )}
+            {autoCalc && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="totalSpent"
+                label="Total Spent"
+                id="totalSpent"
+                value={updateTotalSpent({
+                  signupDate,
+                  freeTrial,
+                  dateFreeTrialEnds,
+                  monthlyFee
+                })}
+                onChange={(e) => setTotalSpent(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  )
+                }}
+              >
+                {totalSpent}
+              </TextField>
+            )}
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -224,7 +286,7 @@ const updateSubPage = ({
               }}
             >
               {totalSpent}
-            </TextField>
+            </TextField> */}
             <Grid
               sx={{
                 display: 'flex',

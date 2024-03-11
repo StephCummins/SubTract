@@ -93,7 +93,7 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="sticky" sx={{ backgroundColor: 'primary.main' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'primary.main' }}>
         <Container maxWidth={false} disableGutters sx={{ mx: '40px' }}>
           <Toolbar
             disableGutters

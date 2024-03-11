@@ -8,4 +8,5 @@ export default interface DatabaseSubscription {
   free_trial: boolean;
   date_free_trial_ends?: string;
   total_spent: number;
+  auto_calc_free_trial?: boolean;
 }

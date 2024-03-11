@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -32,7 +31,9 @@ const addNewSubPage = ({
   const [monthlyFee, setMonthlyFee] = useState('');
   const [freeTrial, setFreeTrial] = useState('');
   const [dateFreeTrialEnds, setDateFreeTrialEnds] = useState('');
-  const [totalSpent, setTotalSpent] = useState('0');
+  const [autoCalc, setAutoCalc] = useState('');
+  const [totalSpent, setTotalSpent] = useState('');
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,8 +49,18 @@ const addNewSubPage = ({
     setFreeTrial(e.target.value);
   };
 
+  const handleAutoCalc = (e) => {
+    setAutoCalc(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(false);
+
+    if (!name || !signupDate || !monthlyFee || !totalSpent) {
+      setError(true);
+      return;
+    }
 
     const newSub = {
       userId: user.userId,
@@ -57,9 +68,10 @@ const addNewSubPage = ({
       website,
       signupDate,
       monthlyFee: parseInt(monthlyFee),
-      freeTrial,
+      freeTrial: freeTrial === '' ? false : freeTrial,
       dateFreeTrialEnds: dateFreeTrialEnds === '' ? null : dateFreeTrialEnds,
-      totalSpent: parseInt(totalSpent)
+      totalSpent: parseInt(totalSpent),
+      autoCalc: autoCalc === '' ? false : autoCalc
     };
 
     try {
@@ -97,6 +109,7 @@ const addNewSubPage = ({
               px: 5,
               my: 5,
               mx: 5,
+              mt: 15,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -190,32 +203,62 @@ const addNewSubPage = ({
                 />
               </LocalizationProvider>
             )}
-
             <TextField
-              margin="normal"
-              required
+              id="automaticallycalctotal"
+              select
               fullWidth
-              name="totalSpent"
-              label="Total Spent"
-              id="totalSpent"
-              value={
-                0 ||
-                updateTotalSpent({
+              label="Automatically Calculate Total Spent?"
+              value={autoCalc}
+              onChange={handleAutoCalc}
+              sx={{ mt: 2 }}
+            >
+              <MenuItem value={true as any}>Yes</MenuItem>
+              <MenuItem value={false as any}>No</MenuItem>
+            </TextField>
+            {!autoCalc && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="totalSpent"
+                label="Total Spent"
+                id="totalSpent"
+                value={totalSpent}
+                onChange={(e) => setTotalSpent(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  )
+                }}
+              >
+                {totalSpent}
+              </TextField>
+            )}
+            {autoCalc && (
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="totalSpent"
+                label="Total Spent"
+                id="totalSpent"
+                value={updateTotalSpent({
                   signupDate,
                   freeTrial,
                   dateFreeTrialEnds,
                   monthlyFee
-                })
-              }
-              onChange={(e) => setTotalSpent(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                )
-              }}
-            >
-              {totalSpent}
-            </TextField>
+                })}
+                onChange={(e) => setTotalSpent(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  )
+                }}
+              >
+                {totalSpent}
+              </TextField>
+            )}
+
             <Grid
               sx={{
                 display: 'flex',
@@ -265,6 +308,13 @@ const addNewSubPage = ({
                 Cancel
               </Button>
             </Grid>
+            {error && (
+              <Grid item sx={{ alignItems: 'left' }}>
+                <Typography sx={{ color: 'red' }}>
+                  <strong>Please Fill Out All Required Fields</strong>
+                </Typography>
+              </Grid>
+            )}
           </Box>
         </Grid>
       </Container>

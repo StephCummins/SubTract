@@ -100,14 +100,6 @@ const App = (): JSX.Element => {
   };
 
   const updateTotalSpent = (sub) => {
-    if (
-      !sub.signupDate ||
-      !sub.freeTrial ||
-      !sub.dateFreeTrialEnds ||
-      !sub.monthlyFee
-    )
-      return 0;
-
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
@@ -122,7 +114,7 @@ const App = (): JSX.Element => {
 
     const totalSpent = sub.monthlyFee * months;
 
-    return totalSpent < 0 ? 0 : totalSpent;
+    return isNaN(totalSpent) || totalSpent < 0 ? 0 : totalSpent;
   };
 
   return (
@@ -169,6 +161,7 @@ const App = (): JSX.Element => {
             user={user}
             setUser={setUser}
             setIsLoggedIn={setIsLoggedIn}
+            updateTotalSpent={updateTotalSpent}
           />
         }
       />

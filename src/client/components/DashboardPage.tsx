@@ -98,16 +98,18 @@ const DashboardPage = ({
     const currentMonth = currentDate.getMonth();
 
     subs.forEach((sub) => {
-      let months = 0;
-      const startDate = sub.freeTrial
-        ? new Date(sub.dateFreeTrialEnds)
-        : new Date(sub.signupDate);
-      months = (currentYear - startDate.getFullYear()) * 12;
-      months -= startDate.getMonth();
-      months += currentMonth;
+      if (sub.autoCalc) {
+        let months = 0;
+        const startDate = sub.freeTrial
+          ? new Date(sub.dateFreeTrialEnds)
+          : new Date(sub.signupDate);
+        months = (currentYear - startDate.getFullYear()) * 12;
+        months -= startDate.getMonth();
+        months += currentMonth;
 
-      const totalSpent = sub.monthlyFee * months;
-      sub.totalSpent = totalSpent < 0 ? 0 : totalSpent;
+        const totalSpent = sub.monthlyFee * months;
+        sub.totalSpent = totalSpent < 0 ? 0 : totalSpent;
+      }
     });
 
     return subs;
@@ -145,7 +147,7 @@ const DashboardPage = ({
             flexDirection: { xs: 'column', md: 'row' },
             justifyContent: { xs: 'center' },
             alignItems: 'center',
-            mt: 1,
+            mt: 10,
             mb: { xs: 2, md: 4 }
           }}
         >

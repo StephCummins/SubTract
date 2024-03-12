@@ -1,34 +1,11 @@
 import request from 'supertest';
 import { server } from '../server';
-
-interface userTest {
-  userId?: number | string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  googleAuth: boolean;
-  picture?: string | null;
-  dateCreated?: string;
-  newPassword?: string;
-}
-
-interface TestSubscription {
-  userId?: number | string;
-  subId?: number | string;
-  name: string;
-  website: string;
-  signupDate: string;
-  monthlyFee: number;
-  freeTrial: boolean;
-  dateFreeTrialEnds: null | string;
-  totalSpent: number;
-  autoCalc: boolean;
-}
+import type UserTest from './testingModels/UserTestInterface';
+import type SubscriptionTest from './testingModels/SubTestInterface';
 
 let subCookie: string[] = [];
-let subTestUser: userTest;
-let subTest: TestSubscription;
+let subTestUser: UserTest;
+let subTest: SubscriptionTest;
 
 beforeAll(async () => {
   subTestUser = {
@@ -101,8 +78,8 @@ describe('server API tests', () => {
 });
 
 describe('user router API tests', () => {
-  let cookie: string[] = [];
-  let testUser: userTest = {
+  let userCookie: string[] = [];
+  let testUser: UserTest = {
     firstName: 'Evie',
     lastName: 'Corgi',
     email: 'lowrider@corgi.com',
@@ -131,7 +108,7 @@ describe('user router API tests', () => {
       expect(response.body.last_name).toEqual('Corgi');
       expect(response.body.email).toEqual('lowrider@corgi.com');
 
-      cookie = response.get('Set-Cookie');
+      userCookie = response.get('Set-Cookie');
       testUser.userId = response.body.user_id;
       testUser.password = response.body.password;
     } catch (error) {
@@ -139,11 +116,11 @@ describe('user router API tests', () => {
     }
   });
 
-  it('Responds with 200 status when a user logs out', async () => {
+  it('Responds with 200 status when a user logs out; the response body is a string with the message: Logged Out', async () => {
     try {
       const response = await request(server)
         .post('/user/logout')
-        .set('Cookie', cookie)
+        .set('Cookie', userCookie)
         .send(testUser)
         .expect('Content-Type', 'text/html; charset=utf-8')
         .expect(200);
@@ -175,7 +152,7 @@ describe('user router API tests', () => {
       expect(response.body.first_name).toEqual('Evie');
       expect(response.body.last_name).toEqual('Corgi');
       expect(response.body.email).toEqual('lowrider@corgi.com');
-      cookie = response.get('Set-Cookie');
+      userCookie = response.get('Set-Cookie');
     } catch (error) {
       console.log('Error at /user/login test:', error);
     }
@@ -186,7 +163,7 @@ describe('user router API tests', () => {
     try {
       const response = await request(server)
         .patch('/user/updateaccount')
-        .set('Cookie', cookie)
+        .set('Cookie', userCookie)
         .send(testUser)
         .expect('Content-Type', /application\/json/)
         .expect(200);
@@ -210,7 +187,7 @@ describe('user router API tests', () => {
     try {
       const response = await request(server)
         .delete('/user/deleteaccount')
-        .set('Cookie', cookie)
+        .set('Cookie', userCookie)
         .send(testUser)
         .expect('Content-Type', 'text/html; charset=utf-8')
         .expect(200);
@@ -250,23 +227,23 @@ describe('sub router API tests', () => {
     }
   });
 
-  it('Responds with 200 status; the response body is an object with all new sub data', async () => {
+  it('Responds with 200 status when all subs are retrieved; the response body is an object all new subs formatted in an array', async () => {
     try {
       const response = await request(server)
         .get(`/subs/retrieveallsubs?userId=${subTestUser.userId}`)
         .set('Cookie', subCookie)
-        //.send(subTest)
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(200);
       expect(response.body).toBeInstanceOf(Object);
       expect(response.body).toHaveProperty('message');
       expect(response.body).toHaveProperty('formattedSubs');
+      expect(response.body.formattedSubs).toBeInstanceOf(Array);
     } catch (error) {
       console.log('Error at /subs/retrieveallsubs test:', error);
     }
   });
 
-  it('Responds with 200 status when a new sub is created; the response body is an object with all new sub data', async () => {
+  it('Responds with 200 status when a sub is edited; the response body is an object with a message property', async () => {
     subTest.monthlyFee = 22;
     try {
       const response = await request(server)
@@ -282,7 +259,7 @@ describe('sub router API tests', () => {
     }
   });
 
-  it('Responds with 200 status when a new sub is created; the response body is an object with all new sub data', async () => {
+  it('Responds with 200 status when a sub is deleted; the response body is an object with a message property', async () => {
     try {
       const response = await request(server)
         .delete('/subs/deletesub')

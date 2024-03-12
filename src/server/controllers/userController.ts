@@ -102,8 +102,9 @@ const userController: NewUserController = {
             checkForInactiveToken,
             queryParamOne
           );
-          if (inactive.rows[0])
+          if (inactive.rows[0]) {
             res.locals.message = ServerErrors.USER_NOT_AUTHENTICATED;
+          }
         }
       }
 
@@ -125,7 +126,6 @@ const userController: NewUserController = {
       const queryParam = [email.toLowerCase()];
 
       const response: any = await db.query(loginData, queryParam);
-
       res.locals.userData = response.rows[0];
       return next();
     } catch (error) {

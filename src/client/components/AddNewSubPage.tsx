@@ -61,7 +61,7 @@ const addNewSubPage = ({
       setError(true);
       return;
     }
-
+    console.log(signupDate);
     const newSub = {
       userId: user.userId,
       name,
@@ -75,7 +75,6 @@ const addNewSubPage = ({
     };
 
     try {
-      console.log('newSub:', newSub);
       const response = await fetch('/subs/addsub', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

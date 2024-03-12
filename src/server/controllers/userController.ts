@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 import db from '../database/db';
 import FileTransfer from '../aws/s3';
 import ServerErrors from '../models/ServerErrors';
@@ -10,19 +11,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface NewUserController {
-  addNewUser(req: Request, res: Response, next: NextFunction): any;
-  setToken(req: Request, res: Response, next: NextFunction): any;
-  authUserToken(req: Request, res: Response, next: NextFunction): any;
-  login(req: Request, res: Response, next: NextFunction): any;
-  hashPassword(req: Request, res: Response, next: NextFunction): any;
-  authPassword(req: Request, res: Response, next: NextFunction): any;
-  updateUserAccount(req: Request, res: Response, next: NextFunction): any;
-  uploadAvatar(req: Request, res: Response, next: NextFunction): any;
-  loadTempAvatar(req: Request, res: Response, next: NextFunction): any;
-  checkUserAccount(req: Request, res: Response, next: NextFunction): any;
-  checkIfLoggedIn(req: Request, res: Response, next: NextFunction): any;
-  logout(req: Request, res: Response, next: NextFunction): any;
-  deleteAccount(req: Request, res: Response, next: NextFunction): any;
+  addNewUser(req: Request, res: Response, next: NextFunction): void;
+  setToken(req: Request, res: Response, next: NextFunction): void;
+  authUserToken(req: Request, res: Response, next: NextFunction): void;
+  login(req: Request, res: Response, next: NextFunction): void;
+  hashPassword(req: Request, res: Response, next: NextFunction): void;
+  authPassword(req: Request, res: Response, next: NextFunction): void;
+  updateUserAccount(req: Request, res: Response, next: NextFunction): void;
+  uploadAvatar(req: Request, res: Response, next: NextFunction): void;
+  loadTempAvatar(req: Request, res: Response, next: NextFunction): void;
+  checkUserAccount(req: Request, res: Response, next: NextFunction): void;
+  checkIfLoggedIn(req: Request, res: Response, next: NextFunction): void;
+  logout(req: Request, res: Response, next: NextFunction): void;
+  deleteAccount(req: Request, res: Response, next: NextFunction): void;
 }
 
 const userController: NewUserController = {
@@ -237,6 +238,10 @@ const userController: NewUserController = {
       const response: any = await db.query(updatedImageData, queryParams);
 
       res.locals.updatedUser = response.rows[0];
+
+      fs.rm('uploads', { recursive: true, force: true }, (error) => {
+        if (error) throw new Error('Error deleting temporary multer directory');
+      });
 
       return next();
     } catch (error) {

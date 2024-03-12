@@ -6,7 +6,7 @@
   "scripts": {
     "build:dev": "tsc --watch --preserveWatchOutput",
     "start:dev": "nodemon dist/server/server.js & webpack -w",
-    "test": "jest -c ./jest.config.json"
+    "test": "jest -c ./jest.config.json --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "Stephanie Cummins",
@@ -53,8 +53,7 @@
     "sass-loader": "^14.1.0",
     "style-loader": "^3.3.4",
     "supertest": "^6.3.4",
-    "ts-node": "^10.9.2",
-    "uuid": "^9.0.1"
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

@@ -129,7 +129,6 @@ describe('user router API tests', () => {
         expect(response.body).toHaveProperty('first_name');
         expect(response.body).toHaveProperty('email');
       })
-      .then(() => console.log('end of update!'))
       .catch((error) => {
         console.log('Error at /user/updateaccount test:', error);
       });

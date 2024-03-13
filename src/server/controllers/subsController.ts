@@ -25,7 +25,7 @@ const subsController: NewSubsController = {
         const response: any = await db.query(subsData, queryParam);
         res.locals.allSubs = response.rows;
       }
-      console.log(res.locals.allSubs);
+
       return next();
     } catch (error) {
       const message: ErrorMessage = {
@@ -165,17 +165,16 @@ const subsController: NewSubsController = {
       if (res.locals.message === ServerErrors.NONE) {
         const { userId } = req.body;
 
-        const subDelete = `DELETE * FROM subscriptions WHERE user_id = $1`;
+        const subDelete = `DELETE FROM subscriptions WHERE user_id = $1`;
         const queryParams = [userId];
 
         await db.query(subDelete, queryParams);
       }
-
       return next();
     } catch (error) {
       const message: ErrorMessage = {
-        log: 'Error at subsController.deleteSub',
-        message: { error: 'Error deleting subscription' }
+        log: 'Error at subsController.deleteAllSubs',
+        message: { error: 'Error deleting all subscriptions' }
       };
       return next(message);
     }

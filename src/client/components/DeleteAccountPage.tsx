@@ -8,13 +8,14 @@ import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './MaterialUITheme';
 import { ThemeProvider } from '@mui/material/styles';
+import ServerErrors from '../../server/models/ServerErrors';
 
 const DeleteAccountPage = ({
   user,
-  setUser,
   subs,
   setSubs,
-  setShowMenu
+  setShowMenu,
+  userNotAuthenticated
 }): JSX.Element => {
   const navigate = useNavigate();
 
@@ -43,7 +44,8 @@ const DeleteAccountPage = ({
       });
 
       if (!response.ok) throw response;
-      resetUser();
+
+      await userNotAuthenticated();
       navigate('/');
     } catch (error) {
       console.log(error, 'Error deleting user account');
@@ -52,31 +54,23 @@ const DeleteAccountPage = ({
 
   const deleteAllSubs = async () => {
     try {
-      const deleteSubs = await fetch('/subs/deleteallsubs', {
+      const response = await fetch('/subs/deleteallsubs', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user.id)
+        body: JSON.stringify(user)
       });
 
-      if (!deleteSubs.ok) return false;
-      else return true;
+      if (!response.ok) return false;
+
+      const data = await response.json();
+
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        await userNotAuthenticated();
+        navigate('/');
+      } else return true;
     } catch (error) {
       console.log(error, 'Error deleting all user subs');
     }
-  };
-
-  const resetUser = () => {
-    const emptyUserInfo = {
-      userId: null,
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      googleAuth: null,
-      picture: null,
-      dateCreated: null
-    };
-    setUser(emptyUserInfo);
   };
 
   return (

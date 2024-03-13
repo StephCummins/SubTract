@@ -18,12 +18,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 
 const App = (): JSX.Element => {
-  const [showMenu, setShowMenu] = useState(true);
-  const [subs, setSubs] = useState([]);
-  const [userError, setUserError] = useState(UserErrors.NONE);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [user, setUser] = useState<User>({
+  const emptyUserInfo: User = {
     userId: null,
     firstName: '',
     lastName: '',
@@ -32,8 +27,13 @@ const App = (): JSX.Element => {
     googleAuth: null,
     picture: null,
     dateCreated: null
-  });
+  };
 
+  const [showMenu, setShowMenu] = useState(true);
+  const [subs, setSubs] = useState([]);
+  const [userError, setUserError] = useState(UserErrors.NONE);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User>(emptyUserInfo);
   const [currentSub, setCurrentSub] = useState<Subscription>({
     subId: null,
     userId: null,
@@ -47,17 +47,6 @@ const App = (): JSX.Element => {
   });
 
   const userNotAuthenticated = () => {
-    const emptyUserInfo: User = {
-      userId: null,
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      googleAuth: null,
-      picture: null,
-      dateCreated: null
-    };
-
     setSubs([]);
     setUser(emptyUserInfo);
   };
@@ -196,8 +185,7 @@ const App = (): JSX.Element => {
             <UpdateSubPage
               currentSub={currentSub}
               setCurrentSub={setCurrentSub}
-              user={user}
-              setUser={setUser}
+              userNotAuthenticated={userNotAuthenticated}
               updateTotalSpent={updateTotalSpent}
               setShowMenu={setShowMenu}
             />
@@ -208,7 +196,7 @@ const App = (): JSX.Element => {
           element={
             <AddNewSubPage
               user={user}
-              setUser={setUser}
+              userNotAuthenticated={userNotAuthenticated}
               updateTotalSpent={updateTotalSpent}
               setShowMenu={setShowMenu}
             />
@@ -245,10 +233,10 @@ const App = (): JSX.Element => {
           element={
             <DeleteAccountPage
               user={user}
-              setUser={setUser}
               subs={subs}
               setSubs={setSubs}
               setShowMenu={setShowMenu}
+              userNotAuthenticated={userNotAuthenticated}
             />
           }
         />

@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
-import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Paper from '@mui/material/Paper';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import theme from './MaterialUITheme';
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import dayjs from 'dayjs';
 import ServerErrors from '../../server/models/ServerErrors';
 
 const addNewSubPage = ({
   user,
-  setUser,
+  userNotAuthenticated,
   updateTotalSpent,
   setShowMenu
 }): JSX.Element => {
@@ -89,6 +89,7 @@ const addNewSubPage = ({
       const data = await response.json();
 
       if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        await userNotAuthenticated();
         navigate('/');
       } else {
         navigate('/dashboard');
@@ -136,7 +137,6 @@ const addNewSubPage = ({
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              // sx={{ mx: 4 }}
             >
               {name}
             </TextField>
@@ -148,7 +148,6 @@ const addNewSubPage = ({
               id="website"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              // sx={{ mx: 2, xs: 4 }}
             >
               {website}
             </TextField>
@@ -258,7 +257,6 @@ const addNewSubPage = ({
                 {totalSpent}
               </TextField>
             )}
-
             <Grid
               sx={{
                 display: 'flex',

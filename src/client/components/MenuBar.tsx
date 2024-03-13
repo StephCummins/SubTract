@@ -151,7 +151,10 @@ const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
                   ) : user.firstName ? (
                     <Avatar {...stringAvatar(user.firstName, user.lastName)} />
                   ) : (
-                    <Avatar alt="" src="/broken-image.jpg" />
+                    <Avatar
+                      alt=""
+                      src={require('../../../public/assets/Default_User_Icon.png')}
+                    />
                   )}
                 </IconButton>
               </Tooltip>

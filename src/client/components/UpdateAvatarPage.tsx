@@ -10,8 +10,14 @@ import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
+import ServerErrors from '../../server/models/ServerErrors';
 
-const UpdateAvatarPage = ({ user, setUser, setShowMenu }): JSX.Element => {
+const UpdateAvatarPage = ({
+  user,
+  setUser,
+  setShowMenu,
+  userNotAuthenticated
+}): JSX.Element => {
   const [fileData, setFileData] = useState('');
   const [fileURL, setFileURL] = useState(user.picture);
 
@@ -24,8 +30,6 @@ const UpdateAvatarPage = ({ user, setUser, setShowMenu }): JSX.Element => {
   const handleImageChange = (e) => {
     setFileData(e.target.files[0]);
     setFileURL(URL.createObjectURL(e.target.files[0]));
-    console.log(fileData);
-    console.log('hi there!');
   };
 
   const handleImageSubmit = async (e) => {
@@ -42,8 +46,14 @@ const UpdateAvatarPage = ({ user, setUser, setShowMenu }): JSX.Element => {
 
       if (!response.ok) throw response;
       const data = await response.json();
-      setUser(data);
-      navigate('/dashboard');
+
+      if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        await userNotAuthenticated();
+        navigate('/');
+      } else {
+        setUser(data);
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.log(error);
     }

@@ -18,14 +18,13 @@ const AccountPage = ({
   setUser,
   userError,
   setUserError,
+  userNotAuthenticated,
   setShowMenu
 }): JSX.Element => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState('');
-  const [buttonColor, setButtonColor] = useState('#219EBC');
-  const [buttonText, setButtonText] = useState('click to upload');
 
   const navigate = useNavigate();
 
@@ -67,10 +66,10 @@ const AccountPage = ({
       const data = await response.json();
 
       if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        await userNotAuthenticated();
         navigate('/');
       } else {
         await setUser(data);
-        console.log('user', user);
         navigate('/dashboard');
       }
     } catch (error) {

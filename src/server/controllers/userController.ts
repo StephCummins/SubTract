@@ -181,36 +181,39 @@ const userController: NewUserController = {
 
   async updateUserAccount(req, res, next) {
     try {
-      const user = req.body;
-      res.locals.password = user.password;
+      if (res.locals.message === ServerErrors.NONE) {
+        const user = req.body;
+        res.locals.password = user.password;
 
-      if (req.body.newPassword !== '') {
-        user.password = req.body.newPassword;
+        if (req.body.newPassword !== '') {
+          user.password = req.body.newPassword;
 
-        const saltRounds = 10;
+          const saltRounds = 10;
 
-        bcrypt.hash(user.password, saltRounds, (err, hash) => {
-          if (err) throw new Error('bcrypt hashing error');
-          else {
-            res.locals.password = hash;
-            return next();
-          }
-        });
+          bcrypt.hash(user.password, saltRounds, (err, hash) => {
+            if (err) throw new Error('bcrypt hashing error');
+            else {
+              res.locals.password = hash;
+              return next();
+            }
+          });
+        }
+
+        const updatedUserData = `UPDATE users SET first_name = $1, last_name = $2, 
+                                 email = $3, password = $4 WHERE user_id = $5 RETURNING *`;
+
+        const queryParams = [
+          user.firstName,
+          user.lastName,
+          user.email,
+          res.locals.password,
+          user.userId
+        ];
+
+        const response: any = await db.query(updatedUserData, queryParams);
+        res.locals.userData = response.rows[0];
       }
 
-      const updatedUserData = `UPDATE users SET first_name = $1, last_name = $2, 
-                               email = $3, password = $4 WHERE user_id = $5 RETURNING *`;
-
-      const queryParams = [
-        user.firstName,
-        user.lastName,
-        user.email,
-        res.locals.password,
-        user.userId
-      ];
-
-      const response: any = await db.query(updatedUserData, queryParams);
-      res.locals.userData = response.rows[0];
       return next();
     } catch (error) {
       const message: ErrorMessage = {
@@ -227,21 +230,24 @@ const userController: NewUserController = {
     const { userId } = req.body;
 
     try {
-      const result = await FileTransfer.uploadFile(file);
-      const imageLocation = result.Location;
+      if (res.locals.message === ServerErrors.NONE) {
+        const result = await FileTransfer.uploadFile(file);
+        const imageLocation = result.Location;
 
-      const updatedImageData = `UPDATE users SET picture = $1 
-                                WHERE user_id = $2 RETURNING *`;
+        const updatedImageData = `UPDATE users SET picture = $1 
+                                  WHERE user_id = $2 RETURNING *`;
 
-      const queryParams = [imageLocation, userId];
+        const queryParams = [imageLocation, userId];
 
-      const response: any = await db.query(updatedImageData, queryParams);
+        const response: any = await db.query(updatedImageData, queryParams);
 
-      res.locals.updatedUser = response.rows[0];
+        res.locals.updatedUser = response.rows[0];
 
-      fs.rm('uploads', { recursive: true, force: true }, (error) => {
-        if (error) throw new Error('Error deleting temporary multer directory');
-      });
+        fs.rm('uploads', { recursive: true, force: true }, (error) => {
+          if (error)
+            throw new Error('Error deleting temporary multer directory');
+        });
+      }
 
       return next();
     } catch (error) {

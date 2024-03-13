@@ -205,6 +205,7 @@ const App = (): JSX.Element => {
               setUser={handleSetUser}
               userError={userError}
               setUserError={setUserError}
+              userNotAuthenticated={userNotAuthenticated}
               setShowMenu={setShowMenu}
             />
           }
@@ -216,6 +217,7 @@ const App = (): JSX.Element => {
               user={user}
               setUser={handleSetUser}
               setShowMenu={setShowMenu}
+              userNotAuthenticated={userNotAuthenticated}
             />
           }
         />

@@ -35,6 +35,7 @@ userRouter.patch(
 userRouter.post(
   '/uploadavatar',
   upload.single('image'),
+  userController.authUserToken,
   userController.uploadAvatar,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.updatedUser);

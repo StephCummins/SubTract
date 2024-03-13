@@ -8,4 +8,5 @@ export default interface Subscription {
   freeTrial: boolean;
   dateFreeTrialEnds?: string;
   totalSpent: number | null;
+  autoCalc?: boolean | null;
 }

@@ -14,12 +14,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 
-const settings = ['Account Info', 'Update Avatar', 'Logout'];
-
-const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
+const MenuBar = ({ user, userNotAuthenticated }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const settings: string[] = ['Account Info', 'Update Avatar', 'Logout'];
 
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
     setAnchorElUser(null);
   };
 
-  const handleMenuClick = (menuItem) => {
+  const handleMenuClick = (menuItem: string) => {
     if (menuItem === 'Logout') handleLogOut();
     if (menuItem === 'Account Info') handleAccountInfo();
     if (menuItem === 'Update Avatar') handleUpdateAvatar();
@@ -47,27 +47,11 @@ const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
 
       if (!response.ok) throw response;
 
-      resetUser();
-      setIsLoggedIn(false);
-      setSubs([]);
+      await userNotAuthenticated();
       navigate('/');
     } catch (error) {
       console.log(error, 'Error logging user out');
     }
-  };
-
-  const resetUser = () => {
-    const emptyUserInfo = {
-      userId: null,
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      googleAuth: null,
-      picture: null,
-      dateCreated: null
-    };
-    setUser(emptyUserInfo);
   };
 
   const handleAccountInfo = () => {
@@ -129,7 +113,6 @@ const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
                 {user.firstName ? `Hello ${user.firstName}` : 'Hi There!'}
               </Typography>
             </Box>
-
             <Box
               display="flex"
               justifyContent="center"

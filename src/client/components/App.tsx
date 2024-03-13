@@ -32,7 +32,6 @@ const App = (): JSX.Element => {
   const [showMenu, setShowMenu] = useState(true);
   const [subs, setSubs] = useState([]);
   const [userError, setUserError] = useState(UserErrors.NONE);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User>(emptyUserInfo);
   const [currentSub, setCurrentSub] = useState<Subscription>({
     subId: null,
@@ -50,7 +49,6 @@ const App = (): JSX.Element => {
     setSubs([]);
     setUser(emptyUserInfo);
   };
-  //const [duplicateUser, setDuplicateUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -102,7 +100,6 @@ const App = (): JSX.Element => {
       const data = await response.json();
 
       handleSetUser(data);
-      setIsLoggedIn(true);
       navigate('/dashboard');
     } catch (error) {
       setUserError(UserErrors.DUPLICATE_USER);
@@ -132,12 +129,7 @@ const App = (): JSX.Element => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {showMenu && (
-        <MenuBar
-          setSubs={setSubs}
-          user={user}
-          setUser={setUser}
-          setIsLoggedIn={setIsLoggedIn}
-        />
+        <MenuBar user={user} userNotAuthenticated={userNotAuthenticated} />
       )}
 
       <Routes>
@@ -147,9 +139,9 @@ const App = (): JSX.Element => {
             <LoginPage
               setUser={handleSetUser}
               signUp={handleSignup}
-              setIsLoggedIn={setIsLoggedIn}
               userError={userError}
               setUserError={setUserError}
+              userNotAuthenticated={userNotAuthenticated}
               setShowMenu={setShowMenu}
             />
           }
@@ -172,9 +164,8 @@ const App = (): JSX.Element => {
               subs={subs}
               setSubs={setSubs}
               user={user}
-              setUser={setUser}
               setCurrentSub={setCurrentSub}
-              setIsLoggedIn={setIsLoggedIn}
+              userNotAuthenticated={userNotAuthenticated}
               setShowMenu={setShowMenu}
             />
           }

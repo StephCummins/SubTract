@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { ThemeProvider } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import theme from './MaterialUITheme';
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import UserErrors from '../models/UserErrors';
 
 interface NewUserAccount {

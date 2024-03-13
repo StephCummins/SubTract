@@ -5,11 +5,11 @@ import Grid from '@mui/material/Grid';
 import theme from './MaterialUITheme';
 import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import SubscriptionTable from './SubscriptionTable';
-import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
+import SubscriptionTable from './SubscriptionTable';
 import ServerErrors from '../../server/models/ServerErrors';
+import type Subscription from '../models/subscriptionInterface';
 
 interface Datasets {
   data: number[];
@@ -23,11 +23,10 @@ interface Chart {
 
 const DashboardPage = ({
   user,
-  setUser,
   subs,
   setSubs,
   setCurrentSub,
-  setIsLoggedIn,
+  userNotAuthenticated,
   setShowMenu
 }): JSX.Element => {
   const emptyPieChart: Chart = {
@@ -56,6 +55,7 @@ const DashboardPage = ({
       const data = await response.json();
 
       if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
+        await userNotAuthenticated();
         navigate('/');
         return null;
       } else if (data.hasOwnProperty('formattedSubs')) {
@@ -92,22 +92,22 @@ const DashboardPage = ({
     func(updatedPieChart);
   };
 
-  const updateTotalSpent = (subs) => {
+  const updateTotalSpent = (subs: Subscription[]) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
-    subs.forEach((sub) => {
-      if (sub.autoCalc) {
+    subs.forEach((sub: Subscription) => {
+      if (sub.autoCalc!) {
         let months = 0;
         const startDate = sub.freeTrial
-          ? new Date(sub.dateFreeTrialEnds)
+          ? new Date(sub.dateFreeTrialEnds!)
           : new Date(sub.signupDate);
         months = (currentYear - startDate.getFullYear()) * 12;
         months -= startDate.getMonth();
         months += currentMonth;
 
-        const totalSpent = sub.monthlyFee * months;
+        const totalSpent = sub.monthlyFee! * months;
         sub.totalSpent = totalSpent < 0 ? 0 : totalSpent;
       }
     });
@@ -118,9 +118,7 @@ const DashboardPage = ({
   const loadPage = async () => {
     const data = await getSubscriptions();
 
-    if (!data) {
-      setIsLoggedIn(false);
-    } else {
+    if (data) {
       generatePieChartData(data, 'monthlyFee', setPieChartData);
       generatePieChartData(data, 'totalSpent', setTotalSpentData);
     }
@@ -192,90 +190,14 @@ const DashboardPage = ({
             <SubscriptionTable
               setCurrentSub={setCurrentSub}
               subs={subs}
-              setIsLoggedIn={setIsLoggedIn}
               loadPage={loadPage}
+              userNotAuthenticated={userNotAuthenticated}
             />
           </Grid>
         </Grid>
-
-        {/* <Grid
-          container
-          spacing={5}
-          sx={{
-            flexDirection: { xs: 'column', md: 'row-reverse' },
-            justifyContent: 'center',
-            alignItems: { xs: 'center', md: 'start' }
-          }}
-        >
-          <Grid item>
-            <PieChartTab
-              pieChartData={pieChartData}
-              totalSpentData={totalSpentData}
-            />
-          </Grid>
-          <Grid item>
-            <SubscriptionTable
-              setCurrentSub={setCurrentSub}
-              subs={subs}
-              setIsLoggedIn={setIsLoggedIn}
-              loadPage={loadPage}
-            />
-          </Grid>
-        </Grid> */}
       </Grid>
     </ThemeProvider>
   );
-
-  // return (
-  //   <ThemeProvider theme={theme}>
-  //     <CssBaseline />
-  //     <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
-  //     <Grid
-  //       sx={{
-  //         display: 'flex',
-  //         flexDirection: { xs: 'column', md: 'row' },
-  //         justifyContent: 'start',
-  //         alignItems: 'center',
-  //         my: 5,
-  //         mx: 5
-  //       }}
-  //     >
-  //       <Typography
-  //         variant="h1"
-  //         color="primary"
-  //         gutterBottom
-  //         sx={{ mr: 7, mt: 2, mb: 5 }}
-  //       >
-  //         Subscription Dashboard
-  //       </Typography>
-  //       <OrangeButton type={'button'} handleOnClick={() => navigate('/add')}>
-  //         Add New Subscription
-  //       </OrangeButton>
-  //     </Grid>
-  //     <Grid
-  //       sx={{
-  //         display: 'flex',
-  //         flexDirection: { xs: 'column', md: 'row-reverse' },
-  //         justifyContent: 'center',
-  //         alignItems: 'start',
-  //         my: 5,
-  //         mx: 5
-  //       }}
-  //     >
-  //       <PieChartTab
-  //         pieChartData={pieChartData}
-  //         totalSpentData={totalSpentData}
-  //       />
-  //       <Grid item xs={12} md={8}>
-  //         <SubscriptionTable
-  //           setCurrentSub={setCurrentSub}
-  //           subs={subs}
-  //           setSubs={setSubs}
-  //         />
-  //       </Grid>
-  //     </Grid>
-  //   </ThemeProvider>
-  // );
 };
 
 export default DashboardPage;

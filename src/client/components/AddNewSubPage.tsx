@@ -64,7 +64,7 @@ const addNewSubPage = ({
       setError(true);
       return;
     }
-    console.log(signupDate);
+
     const newSub = {
       userId: user.userId,
       name,

@@ -10,7 +10,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -34,9 +33,9 @@ declare module 'jwt-decode' {
 const LoginPage = ({
   setUser,
   signUp,
-  setIsLoggedIn,
   userError,
   setUserError,
+  userNotAuthenticated,
   setShowMenu
 }): JSX.Element => {
   const [email, setEmail] = useState('');
@@ -55,15 +54,13 @@ const LoginPage = ({
       if (!response.ok) throw response;
 
       const data = await response.json();
-      console.log(data);
 
       if (data) {
-        setIsLoggedIn(true);
         await setUser(data);
         navigate('/dashboard');
       }
     } catch {
-      setIsLoggedIn(false);
+      userNotAuthenticated();
     }
   };
 
@@ -85,7 +82,6 @@ const LoginPage = ({
 
       const data = await response.json();
       await setUser(data);
-      setIsLoggedIn(true);
       navigate('/dashboard');
     } catch (error) {
       setUserError(UserErrors.LOGIN_ERROR);

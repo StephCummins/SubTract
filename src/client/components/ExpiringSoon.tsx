@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
-import type Subscription from '../models/subscriptionInterface';
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 const ExpiringSoon = ({ expiringSoon }): JSX.Element => {
   return (

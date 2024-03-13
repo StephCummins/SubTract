@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,17 +6,21 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
-import MenuBar from './MenuBar';
+import { ThemeProvider } from '@mui/material/styles';
 
 const DeleteAccountPage = ({
   user,
-  subs,
   setUser,
-  setIsLoggedIn
+  subs,
+  setSubs,
+  setShowMenu
 }): JSX.Element => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setShowMenu(true);
+  }, []);
 
   const handleOnClick = () => {
     deleteUserAccount();
@@ -26,6 +30,7 @@ const DeleteAccountPage = ({
     try {
       if (subs.length > 0) {
         const deleteSubs = await deleteAllSubs();
+        setSubs([]);
 
         if (!deleteSubs)
           throw new Error('Error deleting all user subscriptions');
@@ -39,7 +44,6 @@ const DeleteAccountPage = ({
 
       if (!response.ok) throw response;
       resetUser();
-      setIsLoggedIn(false);
       navigate('/');
     } catch (error) {
       console.log(error, 'Error deleting user account');
@@ -77,7 +81,6 @@ const DeleteAccountPage = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <CssBaseline />
       <Container component="main" maxWidth="xs">
         <Box

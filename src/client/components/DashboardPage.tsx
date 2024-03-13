@@ -5,12 +5,10 @@ import Grid from '@mui/material/Grid';
 import theme from './MaterialUITheme';
 import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import MenuBar from './MenuBar';
 import SubscriptionTable from './SubscriptionTable';
 import type Subscription from '../models/subscriptionInterface';
 import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
-
 import ServerErrors from '../../server/models/ServerErrors';
 
 interface Datasets {
@@ -29,7 +27,8 @@ const DashboardPage = ({
   subs,
   setSubs,
   setCurrentSub,
-  setIsLoggedIn
+  setIsLoggedIn,
+  setShowMenu
 }): JSX.Element => {
   const emptyPieChart: Chart = {
     labels: [],
@@ -43,7 +42,6 @@ const DashboardPage = ({
 
   const [totalSpentData, setTotalSpentData] = useState<Chart>(emptyPieChart);
   const [pieChartData, setPieChartData] = useState<Chart>(emptyPieChart);
-  // const [subs, setSubs] = useState([]);
 
   const navigate = useNavigate();
 
@@ -129,18 +127,13 @@ const DashboardPage = ({
   };
 
   useEffect(() => {
+    setShowMenu(true);
     loadPage();
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar
-        setSubs={setSubs}
-        user={user}
-        setUser={setUser}
-        setIsLoggedIn={setIsLoggedIn}
-      />
       <Grid
         container
         direction="column"

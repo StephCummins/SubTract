@@ -11,21 +11,16 @@ import TextField from '@mui/material/TextField';
 import theme from './MaterialUITheme';
 import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import MenuBar from './MenuBar';
 import BudgetChart from './BudgetChart';
 
-const PerformancePage = ({
-  subs,
-  user,
-  setUser,
-  setIsLoggedIn
-}): JSX.Element => {
+const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
   const [totalMonthlySpend, setTotalMonthlySpend] = useState(0);
   const [budget, setBudget] = useState(100);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    setShowMenu(true);
     calculateTotalMonthlySpend();
   });
 
@@ -41,7 +36,6 @@ const PerformancePage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container>
         <Grid item xs={12} md={6} component={Paper} elevation={6} square>
           <Box

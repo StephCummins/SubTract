@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -10,13 +10,16 @@ import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
-import MenuBar from './MenuBar';
 
-const UpdateAvatarPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
+const UpdateAvatarPage = ({ user, setUser, setShowMenu }): JSX.Element => {
   const [fileData, setFileData] = useState('');
   const [fileURL, setFileURL] = useState(user.picture);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setShowMenu(true);
+  }, []);
 
   const handleImageChange = (e) => {
     setFileData(e.target.files[0]);
@@ -62,7 +65,6 @@ const UpdateAvatarPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container component="main" maxWidth="xs">
         <Box
           sx={{

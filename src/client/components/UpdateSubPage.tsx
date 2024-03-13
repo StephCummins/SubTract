@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -16,7 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import theme from './MaterialUITheme';
-import MenuBar from './MenuBar';
+
 import ServerErrors from '../../server/models/ServerErrors';
 
 const updateSubPage = ({
@@ -24,8 +24,8 @@ const updateSubPage = ({
   setCurrentSub,
   user,
   setUser,
-  setIsLoggedIn,
-  updateTotalSpent
+  updateTotalSpent,
+  setShowMenu
 }): JSX.Element => {
   const [name, setName] = useState(currentSub.name);
   const [website, setWebsite] = useState(currentSub.website);
@@ -42,6 +42,10 @@ const updateSubPage = ({
   const [error, setError] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setShowMenu(true);
+  }, []);
 
   const handleSignupDate = (newValue) => {
     if (newValue) setSignupDate(newValue);
@@ -96,7 +100,6 @@ const updateSubPage = ({
       console.log(data);
 
       if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
-        setIsLoggedIn(false);
         navigate('/');
       } else {
         setCurrentSub({
@@ -121,7 +124,6 @@ const updateSubPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container>
         <Grid item xs={12} md={5} component={Paper} elevation={6} square>
           <Box

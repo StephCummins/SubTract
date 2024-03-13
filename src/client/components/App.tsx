@@ -6,14 +6,19 @@ import UpdateAvatarPage from './UpdateAvatarPage';
 import DashboardPage from './DashboardPage';
 import DeleteAccountPage from './DeleteAccountPage';
 import LoginPage from './LoginPage';
+import MenuBar from './MenuBar';
 import PerformancePage from './PerformancePage';
 import SignupPage from './SignupPage';
 import UpdateSubPage from './UpdateSubPage';
 import UserErrors from '../models/UserErrors';
 import type Subscription from '../models/subscriptionInterface';
 import type User from '../models/userInterface';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './MaterialUITheme';
 
 const App = (): JSX.Element => {
+  const [showMenu, setShowMenu] = useState(true);
   const [subs, setSubs] = useState([]);
   const [userError, setUserError] = useState(UserErrors.NONE);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,7 +46,22 @@ const App = (): JSX.Element => {
     totalSpent: null
   });
 
-  const [duplicateUser, setDuplicateUser] = useState(false);
+  const userNotAuthenticated = () => {
+    const emptyUserInfo: User = {
+      userId: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      googleAuth: null,
+      picture: null,
+      dateCreated: null
+    };
+
+    setSubs([]);
+    setUser(emptyUserInfo);
+  };
+  //const [duplicateUser, setDuplicateUser] = useState(false);
 
   const navigate = useNavigate();
 
@@ -101,130 +121,139 @@ const App = (): JSX.Element => {
     }
   };
 
-  const updateTotalSpent = (sub) => {
+  const updateTotalSpent = (sub: Subscription) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
 
     let months = 0;
     const startDate = sub.freeTrial
-      ? new Date(sub.dateFreeTrialEnds)
+      ? new Date(sub.dateFreeTrialEnds!)
       : new Date(sub.signupDate);
     months = (currentYear - startDate.getFullYear()) * 12;
     months -= startDate.getMonth();
     months += currentMonth;
 
-    const totalSpent = sub.monthlyFee * months;
+    const totalSpent = sub.monthlyFee! * months;
 
     return isNaN(totalSpent) || totalSpent < 0 ? 0 : totalSpent;
   };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <LoginPage
-            setUser={handleSetUser}
-            signUp={handleSignup}
-            setIsLoggedIn={setIsLoggedIn}
-            userError={userError}
-            setUserError={setUserError}
-          />
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <SignupPage
-            signUp={handleSignup}
-            userError={userError}
-            setUserError={setUserError}
-          />
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <DashboardPage
-            subs={subs}
-            setSubs={setSubs}
-            user={user}
-            setUser={setUser}
-            setCurrentSub={setCurrentSub}
-            setIsLoggedIn={setIsLoggedIn}
-          />
-        }
-      />
-      <Route
-        path="/update"
-        element={
-          <UpdateSubPage
-            currentSub={currentSub}
-            setCurrentSub={setCurrentSub}
-            user={user}
-            setUser={setUser}
-            setIsLoggedIn={setIsLoggedIn}
-            updateTotalSpent={updateTotalSpent}
-          />
-        }
-      />
-      <Route
-        path="/add"
-        element={
-          <AddNewSubPage
-            user={user}
-            setUser={setUser}
-            setIsLoggedIn={setIsLoggedIn}
-            updateTotalSpent={updateTotalSpent}
-          />
-        }
-      />
-      <Route
-        path="/viewperformance"
-        element={
-          <PerformancePage
-            user={user}
-            setUser={setUser}
-            subs={subs}
-            setIsLoggedIn={setIsLoggedIn}
-          />
-        }
-      />
-      <Route
-        path="/account"
-        element={
-          <AccountPage
-            user={user}
-            setUser={handleSetUser}
-            setIsLoggedIn={setIsLoggedIn}
-            userError={userError}
-            setUserError={setUserError}
-          />
-        }
-      />
-      <Route
-        path="/updateavatar"
-        element={
-          <UpdateAvatarPage
-            user={user}
-            setUser={handleSetUser}
-            setIsLoggedIn={setIsLoggedIn}
-          />
-        }
-      />
-      <Route
-        path="/delete"
-        element={
-          <DeleteAccountPage
-            user={user}
-            setUser={setUser}
-            subs={subs}
-            setIsLoggedIn={setIsLoggedIn}
-          />
-        }
-      />
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {showMenu && (
+        <MenuBar
+          setSubs={setSubs}
+          user={user}
+          setUser={setUser}
+          setIsLoggedIn={setIsLoggedIn}
+        />
+      )}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LoginPage
+              setUser={handleSetUser}
+              signUp={handleSignup}
+              setIsLoggedIn={setIsLoggedIn}
+              userError={userError}
+              setUserError={setUserError}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <SignupPage
+              signUp={handleSignup}
+              userError={userError}
+              setUserError={setUserError}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <DashboardPage
+              subs={subs}
+              setSubs={setSubs}
+              user={user}
+              setUser={setUser}
+              setCurrentSub={setCurrentSub}
+              setIsLoggedIn={setIsLoggedIn}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/update"
+          element={
+            <UpdateSubPage
+              currentSub={currentSub}
+              setCurrentSub={setCurrentSub}
+              user={user}
+              setUser={setUser}
+              updateTotalSpent={updateTotalSpent}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/add"
+          element={
+            <AddNewSubPage
+              user={user}
+              setUser={setUser}
+              updateTotalSpent={updateTotalSpent}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/viewperformance"
+          element={<PerformancePage subs={subs} setShowMenu={setShowMenu} />}
+        />
+        <Route
+          path="/account"
+          element={
+            <AccountPage
+              user={user}
+              setUser={handleSetUser}
+              userError={userError}
+              setUserError={setUserError}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/updateavatar"
+          element={
+            <UpdateAvatarPage
+              user={user}
+              setUser={handleSetUser}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+        <Route
+          path="/delete"
+          element={
+            <DeleteAccountPage
+              user={user}
+              setUser={setUser}
+              subs={subs}
+              setSubs={setSubs}
+              setShowMenu={setShowMenu}
+            />
+          }
+        />
+      </Routes>
+    </ThemeProvider>
   );
 };
 

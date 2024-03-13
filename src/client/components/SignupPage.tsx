@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -19,11 +19,20 @@ interface NewUserAccount {
   googleAuth: boolean;
 }
 
-const SignupPage = ({ signUp, userError, setUserError }): JSX.Element => {
+const SignupPage = ({
+  signUp,
+  userError,
+  setUserError,
+  setShowMenu
+}): JSX.Element => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    setShowMenu(false);
+  }, []);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

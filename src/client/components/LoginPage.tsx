@@ -36,7 +36,8 @@ const LoginPage = ({
   signUp,
   setIsLoggedIn,
   userError,
-  setUserError
+  setUserError,
+  setShowMenu
 }): JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +45,7 @@ const LoginPage = ({
   const navigate = useNavigate();
 
   useEffect(() => {
+    setShowMenu(false);
     checkIfLoggedIn();
   }, []);
 

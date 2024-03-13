@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
 import theme from './MaterialUITheme';
-import MenuBar from './MenuBar';
-import UserErrors from '../models/UserErrors';
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import ServerErrors from '../../server/models/ServerErrors';
+import UserErrors from '../models/UserErrors';
 
 const AccountPage = ({
   user,
   setUser,
-  setIsLoggedIn,
   userError,
-  setUserError
+  setUserError,
+  setShowMenu
 }): JSX.Element => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
@@ -29,6 +28,10 @@ const AccountPage = ({
   const [buttonText, setButtonText] = useState('click to upload');
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setShowMenu(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +67,6 @@ const AccountPage = ({
       const data = await response.json();
 
       if (data.message === ServerErrors.USER_NOT_AUTHENTICATED) {
-        setIsLoggedIn(false);
         navigate('/');
       } else {
         await setUser(data);
@@ -79,7 +81,6 @@ const AccountPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
       <Container component="main" maxWidth="xs">
         <Box
           sx={{

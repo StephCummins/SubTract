@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
 import theme from './MaterialUITheme';
+import { ThemeProvider } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import MenuBar from './MenuBar';
 import SubscriptionTable from './SubscriptionTable';
 import type Subscription from '../models/subscriptionInterface';
@@ -147,8 +147,8 @@ const DashboardPage = ({
             flexDirection: { xs: 'column', md: 'row' },
             justifyContent: { xs: 'center' },
             alignItems: 'center',
-            mt: 10,
-            mb: { xs: 2, md: 4 }
+            mt: 8,
+            mb: { xs: 1, md: 2 }
           }}
         >
           <Grid item>
@@ -189,6 +189,31 @@ const DashboardPage = ({
             />
           </Grid>
         </Grid>
+
+        {/* <Grid
+          container
+          spacing={5}
+          sx={{
+            flexDirection: { xs: 'column', md: 'row-reverse' },
+            justifyContent: 'center',
+            alignItems: { xs: 'center', md: 'start' }
+          }}
+        >
+          <Grid item>
+            <PieChartTab
+              pieChartData={pieChartData}
+              totalSpentData={totalSpentData}
+            />
+          </Grid>
+          <Grid item>
+            <SubscriptionTable
+              setCurrentSub={setCurrentSub}
+              subs={subs}
+              setIsLoggedIn={setIsLoggedIn}
+              loadPage={loadPage}
+            />
+          </Grid>
+        </Grid> */}
       </Grid>
     </ThemeProvider>
   );

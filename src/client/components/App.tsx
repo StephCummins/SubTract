@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import SignupPage from './SignupPage';
-import LoginPage from './LoginPage';
-import DashboardPage from './DashboardPage';
-import UpdateSubPage from './UpdateSubPage';
 import AddNewSubPage from './AddNewSubPage';
 import AccountPage from './AccountPage';
 import UpdateAvatarPage from './UpdateAvatarPage';
+import DashboardPage from './DashboardPage';
 import DeleteAccountPage from './DeleteAccountPage';
+import LoginPage from './LoginPage';
+import PerformancePage from './PerformancePage';
+import SignupPage from './SignupPage';
+import UpdateSubPage from './UpdateSubPage';
 import UserErrors from '../models/UserErrors';
-import type User from '../models/userInterface';
 import type Subscription from '../models/subscriptionInterface';
+import type User from '../models/userInterface';
 
 const App = (): JSX.Element => {
+  const [subs, setSubs] = useState([]);
   const [userError, setUserError] = useState(UserErrors.NONE);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -145,6 +147,8 @@ const App = (): JSX.Element => {
         path="/dashboard"
         element={
           <DashboardPage
+            subs={subs}
+            setSubs={setSubs}
             user={user}
             setUser={setUser}
             setCurrentSub={setCurrentSub}
@@ -173,6 +177,18 @@ const App = (): JSX.Element => {
             setUser={setUser}
             setIsLoggedIn={setIsLoggedIn}
             updateTotalSpent={updateTotalSpent}
+          />
+        }
+      />
+      <Route
+        path="/viewperformance"
+        element={
+          <PerformancePage
+            user={user}
+            setUser={setUser}
+            subs={subs}
+            setSubs={setSubs}
+            setIsLoggedIn={setIsLoggedIn}
           />
         }
       />

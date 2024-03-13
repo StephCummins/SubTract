@@ -26,6 +26,8 @@ interface Chart {
 const DashboardPage = ({
   user,
   setUser,
+  subs,
+  setSubs,
   setCurrentSub,
   setIsLoggedIn
 }): JSX.Element => {
@@ -41,7 +43,7 @@ const DashboardPage = ({
 
   const [totalSpentData, setTotalSpentData] = useState<Chart>(emptyPieChart);
   const [pieChartData, setPieChartData] = useState<Chart>(emptyPieChart);
-  const [subs, setSubs] = useState([]);
+  // const [subs, setSubs] = useState([]);
 
   const navigate = useNavigate();
 
@@ -162,6 +164,14 @@ const DashboardPage = ({
               handleOnClick={() => navigate('/add')}
             >
               Add New Subscription
+            </OrangeButton>
+          </Grid>
+          <Grid item sx={{ mt: { md: 2.5, xs: -2 } }}>
+            <OrangeButton
+              type={'button'}
+              handleOnClick={() => navigate('/viewperformance')}
+            >
+              Budget Performance
             </OrangeButton>
           </Grid>
         </Grid>

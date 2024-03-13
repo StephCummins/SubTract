@@ -24,6 +24,7 @@ const subsController: NewSubsController = {
         const response: any = await db.query(subsData, queryParam);
         res.locals.allSubs = response.rows;
       }
+      console.log(res.locals.allSubs);
       return next();
     } catch (error) {
       const message: ErrorMessage = {

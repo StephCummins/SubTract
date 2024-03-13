@@ -5,11 +5,12 @@ import type ErrorMessage from '../models/errorInterface';
 import type DatabaseSubscription from '../models/dbSubInterface';
 
 interface NewSubsController {
-  getAllSubs(req: Request, res: Response, next: NextFunction): any;
-  addNewSub(req: Request, res: Response, next: NextFunction): any;
-  editSub(req: Request, res: Response, next: NextFunction): any;
-  deleteSub(req: Request, res: Response, next: NextFunction): any;
-  formatSubs(req: Request, res: Response, next: NextFunction): any;
+  getAllSubs(req: Request, res: Response, next: NextFunction): void;
+  addNewSub(req: Request, res: Response, next: NextFunction): void;
+  editSub(req: Request, res: Response, next: NextFunction): void;
+  deleteSub(req: Request, res: Response, next: NextFunction): void;
+  formatSubs(req: Request, res: Response, next: NextFunction): void;
+  deleteAllSubs(req: Request, res: Response, next: NextFunction): void;
 }
 
 const subsController: NewSubsController = {
@@ -154,6 +155,27 @@ const subsController: NewSubsController = {
       const message: ErrorMessage = {
         log: 'Error at subsController.formatSub',
         message: { error: 'Error formating subs' }
+      };
+      return next(message);
+    }
+  },
+
+  async deleteAllSubs(req, res, next) {
+    try {
+      if (res.locals.message === ServerErrors.NONE) {
+        const { userId } = req.body;
+
+        const subDelete = `DELETE * FROM subscriptions WHERE user_id = $1`;
+        const queryParams = [userId];
+
+        await db.query(subDelete, queryParams);
+      }
+
+      return next();
+    } catch (error) {
+      const message: ErrorMessage = {
+        log: 'Error at subsController.deleteSub',
+        message: { error: 'Error deleting subscription' }
       };
       return next(message);
     }

@@ -10,7 +10,12 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './MaterialUITheme';
 import MenuBar from './MenuBar';
 
-const DeleteAccountPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
+const DeleteAccountPage = ({
+  user,
+  subs,
+  setUser,
+  setIsLoggedIn
+}): JSX.Element => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
@@ -19,6 +24,13 @@ const DeleteAccountPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
 
   const deleteUserAccount = async () => {
     try {
+      if (subs.length > 0) {
+        const deleteSubs = await deleteAllSubs();
+
+        if (!deleteSubs)
+          throw new Error('Error deleting all user subscriptions');
+      }
+
       const response = await fetch('/user/deleteaccount', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
@@ -31,6 +43,21 @@ const DeleteAccountPage = ({ user, setUser, setIsLoggedIn }): JSX.Element => {
       navigate('/');
     } catch (error) {
       console.log(error, 'Error deleting user account');
+    }
+  };
+
+  const deleteAllSubs = async () => {
+    try {
+      const deleteSubs = await fetch('/subs/deleteallsubs', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user.id)
+      });
+
+      if (!deleteSubs.ok) return false;
+      else return true;
+    } catch (error) {
+      console.log(error, 'Error deleting all user subs');
     }
   };
 

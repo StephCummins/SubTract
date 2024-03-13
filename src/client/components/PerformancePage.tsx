@@ -16,25 +16,23 @@ import BudgetChart from './BudgetChart';
 
 const PerformancePage = ({
   subs,
-  setSubs,
   user,
   setUser,
   setIsLoggedIn
 }): JSX.Element => {
   const [totalMonthlySpend, setTotalMonthlySpend] = useState(0);
   const [budget, setBudget] = useState(100);
-  const [fontColor, setFontColor] = useState<String>('green');
+
   const navigate = useNavigate();
 
   useEffect(() => {
     calculateTotalMonthlySpend();
-    setFontColor(budget - totalMonthlySpend >= 0 ? 'green' : 'red');
   });
 
   const calculateTotalMonthlySpend = () => {
-    console.log(subs);
     const total = subs.reduce(
-      (accum, currentVal) => accum + currentVal.monthlyFee!,
+      (accum: number, currentVal: { monthlyFee: number }) =>
+        accum + currentVal.monthlyFee!,
       0
     );
     setTotalMonthlySpend(total);

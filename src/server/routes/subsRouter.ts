@@ -45,4 +45,13 @@ subsRouter.delete(
   }
 );
 
+subsRouter.delete(
+  '/deleteallsubs',
+  userController.authUserToken,
+  subsController.deleteAllSubs,
+  (req: Request, res: Response, next: NextFunction) => {
+    return res.status(200).send({ message: res.locals.message });
+  }
+);
+
 export default subsRouter;

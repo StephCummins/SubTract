@@ -187,7 +187,6 @@ const App = (): JSX.Element => {
             user={user}
             setUser={setUser}
             subs={subs}
-            setSubs={setSubs}
             setIsLoggedIn={setIsLoggedIn}
           />
         }
@@ -220,6 +219,7 @@ const App = (): JSX.Element => {
           <DeleteAccountPage
             user={user}
             setUser={setUser}
+            subs={subs}
             setIsLoggedIn={setIsLoggedIn}
           />
         }

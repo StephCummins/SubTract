@@ -16,7 +16,7 @@ import theme from './MaterialUITheme';
 
 const settings = ['Account Info', 'Update Avatar', 'Logout'];
 
-const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
+const MenuBar = ({ setSubs, user, setUser, setIsLoggedIn }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -49,6 +49,7 @@ const MenuBar = ({ user, setUser, setIsLoggedIn }) => {
 
       resetUser();
       setIsLoggedIn(false);
+      setSubs([]);
       navigate('/');
     } catch (error) {
       console.log(error, 'Error logging user out');

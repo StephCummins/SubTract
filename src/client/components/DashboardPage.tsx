@@ -135,7 +135,12 @@ const DashboardPage = ({
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <MenuBar user={user} setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
+      <MenuBar
+        setSubs={setSubs}
+        user={user}
+        setUser={setUser}
+        setIsLoggedIn={setIsLoggedIn}
+      />
       <Grid
         container
         direction="column"

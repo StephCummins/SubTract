@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Grid from '@mui/material/Grid';
+import type Subscription from '../models/subscriptionInterface';
 
 interface Datasets {
   data: number[];
@@ -23,7 +24,7 @@ const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
     ]
   };
   const [idealBudget, setIdealBudget] = useState(budget[0]);
-  const [chartValues, setChartValues] = useState([]);
+  const [chartValues, setChartValues] = useState<Subscription[][]>([]);
   const [pieChartData, setPieChartData] = useState<Chart[]>([emptyPieChart]);
 
   useEffect(() => {
@@ -49,13 +50,15 @@ const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
   const findOptimalCombinations = (subs, idealBudget) => {
     const sorted = subs.sort((a, b) => a.monthlyFee - b.monthlyFee);
     const allCombos = findAllCombinations(sorted, idealBudget);
-    const topCombos = allCombos.sort((a, b) => b.length - a.length);
+    const topCombos: Subscription[][] = allCombos.sort(
+      (a, b) => b.length - a.length
+    );
     setChartValues(topCombos.slice(0, 4));
     return topCombos.slice(0, 4);
   };
 
   const findAllCombinations = (values, budget, startIdx = 0) => {
-    const result = [];
+    const result: Subscription[][] = [];
 
     for (let idx = startIdx; idx < values.length; idx++) {
       if (values[idx].monthlyFee > budget) break;

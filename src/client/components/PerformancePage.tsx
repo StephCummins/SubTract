@@ -12,10 +12,12 @@ import theme from './MaterialUITheme';
 import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import BudgetChart from './BudgetChart';
+import CalcBudgetOptions from './CalcBudgetOptions';
 
 const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
   const [totalMonthlySpend, setTotalMonthlySpend] = useState(0);
   const [budget, setBudget] = useState(100);
+  const [performance, setPerformance] = useState('');
 
   const navigate = useNavigate();
 
@@ -31,6 +33,8 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
       0
     );
     setTotalMonthlySpend(total);
+    if (total <= budget) setPerformance('underBudget');
+    else if (total > budget) setPerformance('overBudget');
   };
 
   return (
@@ -157,6 +161,23 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
                   </p>
                 )}
               </Grid>
+            </Grid>
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                justifyContent: 'center',
+                alignItems: 'center',
+                mt: 5
+              }}
+            >
+              <CalcBudgetOptions
+                subs={subs}
+                budget={budget}
+                performance={performance}
+              />
             </Grid>
           </Box>
         </Grid>

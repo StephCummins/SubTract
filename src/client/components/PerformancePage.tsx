@@ -16,7 +16,7 @@ import CalcBudgetOptions from './CalcBudgetOptions';
 
 const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
   const [totalMonthlySpend, setTotalMonthlySpend] = useState(0);
-  const [budget, setBudget] = useState(100);
+  const [budget, setBudget] = useState([100]);
   const [performance, setPerformance] = useState('');
 
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
               <Grid item xs={12} md={8}>
                 <Typography
                   component="h2"
-                  variant="h5"
+                  variant="h4"
                   color="primary"
                   sx={{ textAlign: 'center' }}
                   gutterBottom
@@ -125,15 +125,15 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
                   fullWidth
                   name="targetBudget"
                   label="Target Monthly Budget"
-                  value={isNaN(budget) ? setBudget(0) : budget}
-                  onChange={(e) => setBudget(parseInt(e.target.value))}
+                  value={isNaN(budget[0]) ? setBudget([0]) : budget[0]}
+                  onChange={(e) => setBudget([parseInt(e.target.value)])}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">$</InputAdornment>
                     )
                   }}
                 />
-                {budget - totalMonthlySpend >= 0 && (
+                {budget[0] - totalMonthlySpend >= 0 && (
                   <p
                     style={{
                       backgroundColor: '#e4e4e4',
@@ -143,11 +143,11 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
                       textAlign: 'center'
                     }}
                   >
-                    You are ${budget - totalMonthlySpend} under budget per
+                    You are ${budget[0] - totalMonthlySpend} under budget per
                     month!
                   </p>
                 )}
-                {totalMonthlySpend - budget > 0 && (
+                {totalMonthlySpend - budget[0] > 0 && (
                   <p
                     style={{
                       backgroundColor: '#e4e4e4',
@@ -157,28 +157,38 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
                       textAlign: 'center'
                     }}
                   >
-                    You are ${totalMonthlySpend - budget} over budget per month
+                    You are ${totalMonthlySpend - budget[0]} over budget per
+                    month
                   </p>
                 )}
               </Grid>
             </Grid>
-            <Grid
-              container
-              spacing={2}
-              sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                justifyContent: 'center',
-                alignItems: 'center',
-                mt: 5
-              }}
-            >
-              <CalcBudgetOptions
-                subs={subs}
-                budget={budget}
-                performance={performance}
-              />
-            </Grid>
+            {subs.length > 0 && (
+              <>
+                <Typography
+                  component="h2"
+                  variant="h4"
+                  color="primary"
+                  sx={{ textAlign: 'center', mt: 8 }}
+                >
+                  Optimize Your Monthly Spending:
+                </Typography>
+                <Typography
+                  component="h2"
+                  variant="h5"
+                  color="primary"
+                  sx={{ textAlign: 'center', letterSpacing: '2.5px' }}
+                  gutterBottom
+                >
+                  Subscription Combinations To Stay Below Your Target Budget
+                </Typography>
+                <CalcBudgetOptions
+                  subs={subs}
+                  budget={budget}
+                  performance={performance}
+                />
+              </>
+            )}
           </Box>
         </Grid>
       </Container>

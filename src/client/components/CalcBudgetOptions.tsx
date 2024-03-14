@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import Grid from '@mui/material/Grid';
 
@@ -23,29 +22,34 @@ const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
       }
     ]
   };
-  const [idealBudget, setIdealBudget] = useState(budget);
+  const [idealBudget, setIdealBudget] = useState(budget[0]);
   const [chartValues, setChartValues] = useState([]);
   const [pieChartData, setPieChartData] = useState<Chart[]>([emptyPieChart]);
 
   useEffect(() => {
-    checkPerformance();
-    if (subs.length > 1) {
-      const chartData = findOptimalCombinations(subs, idealBudget);
-      generatePieChartData(chartData);
-    }
-  }, []);
+    const newBudget = checkPerformance();
+
+    setPieChartData([]);
+    const chartData = findOptimalCombinations(subs, newBudget);
+    generatePieChartData(chartData);
+  }, [budget]);
 
   const checkPerformance = () => {
+    let newBudget: number = 0;
     if (performance === 'underBudget') {
-      setIdealBudget(budget - budget * 0.2);
+      setIdealBudget(budget[0] - budget[0] * 0.2);
+      newBudget = budget[0] - budget[0] * 0.2;
+    } else {
+      setIdealBudget(budget[0]);
+      newBudget = budget[0];
     }
+    return newBudget;
   };
 
   const findOptimalCombinations = (subs, idealBudget) => {
     const sorted = subs.sort((a, b) => a.monthlyFee - b.monthlyFee);
     const allCombos = findAllCombinations(sorted, idealBudget);
     const topCombos = allCombos.sort((a, b) => b.length - a.length);
-    console.log(topCombos.slice(0, 4));
     setChartValues(topCombos.slice(0, 4));
     return topCombos.slice(0, 4);
   };
@@ -74,7 +78,6 @@ const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
 
   const generatePieChartData = (chartData) => {
     chartData.forEach((value) => {
-      console.log(value);
       const updatedPieChart: Chart = {
         labels: [],
         datasets: [
@@ -96,10 +99,59 @@ const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
   };
 
   return (
-    <Grid item xs={12} md={6}>
-      {pieChartData.map((obj, idx) => (
-        <Doughnut key={idx} data={obj} />
-      ))}
+    <Grid
+      container
+      spacing={4}
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        justifyContent: 'center',
+        alignItems: 'center',
+        mt: 2
+      }}
+    >
+      {pieChartData.length === 0 && (
+        <p
+          style={{
+            backgroundColor: '#e4e4e4',
+            color: 'red',
+            fontSize: 'medium',
+            fontWeight: 'bold',
+            textAlign: 'center'
+          }}
+        >
+          No Current Options With Your Current Subscriptions and Target Budget
+        </p>
+      )}
+      {pieChartData.length > 0 &&
+        pieChartData.map((obj, idx) => {
+          const total = obj.datasets[0].data.reduce((a, b) => a + b, 0);
+          return (
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{
+                mx: 3
+              }}
+              key={idx}
+            >
+              <Doughnut key={idx} data={obj} />
+              <p
+                style={{
+                  backgroundColor: '#e4e4e4',
+                  color: 'green',
+                  fontSize: 'medium',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}
+              >
+                New Total: ${total}
+                <br />${idealBudget - total} Under Budget
+              </p>
+            </Grid>
+          );
+        })}
     </Grid>
   );
 };

@@ -29,7 +29,7 @@ const BudgetChart = ({ totalMonthlySpend, budget }): JSX.Element => {
     labels: ['Target Monthly Budget', 'Current Monthly Budget'],
     datasets: [
       {
-        data: [budget, totalMonthlySpend],
+        data: [budget[0], totalMonthlySpend],
         backgroundColor: ['#2DD881', '#06BEE1']
       }
     ]

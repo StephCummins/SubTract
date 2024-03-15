@@ -69,7 +69,7 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
               onClick={() => navigate('/dashboard')}
               sx={{
                 mt: 1,
-                mb: 5,
+                mb: 3,
                 py: 2,
                 mx: 2,
                 width: '225px',
@@ -175,9 +175,11 @@ const PerformancePage = ({ subs, setShowMenu }): JSX.Element => {
                 </Typography>
                 <Typography
                   component="h2"
-                  variant="h5"
-                  color="primary"
-                  sx={{ textAlign: 'center', letterSpacing: '2.5px' }}
+                  color="#616161"
+                  fontFamily="poppins"
+                  fontSize="1.15rem"
+                  fontWeight="bold"
+                  sx={{ textAlign: 'center' }}
                   gutterBottom
                 >
                   Subscription Combinations To Stay Below Your Target Budget

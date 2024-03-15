@@ -9,17 +9,8 @@ import OrangeButton from './OrangeButton';
 import PieChartTab from './PieChartTab';
 import SubscriptionTable from './SubscriptionTable';
 import ServerErrors from '../../server/models/ServerErrors';
+import type Chart from '../models/ChartInterface';
 import type Subscription from '../models/subscriptionInterface';
-
-interface Datasets {
-  data: number[];
-  backgroundColor: string[];
-}
-
-interface Chart {
-  labels: string[];
-  datasets: Datasets[];
-}
 
 const DashboardPage = ({
   user,
@@ -145,11 +136,11 @@ const DashboardPage = ({
             flexDirection: { xs: 'column', md: 'row' },
             justifyContent: { xs: 'center' },
             alignItems: 'center',
-            mt: 8,
-            mb: { xs: 1, md: 2 }
+            mt: 9,
+            mb: { xs: 3, md: 5 }
           }}
         >
-          <Grid item>
+          <Grid item sx={{ mr: 10 }}>
             <Typography variant="h1" color="primary">
               Subscription Dashboard
             </Typography>
@@ -168,6 +159,14 @@ const DashboardPage = ({
               handleOnClick={() => navigate('/viewperformance')}
             >
               Budget Performance
+            </OrangeButton>
+          </Grid>
+          <Grid item sx={{ mt: { md: 2.5, xs: -2 } }}>
+            <OrangeButton
+              type={'button'}
+              handleOnClick={() => navigate('/budgettips')}
+            >
+              Budget Tips
             </OrangeButton>
           </Grid>
         </Grid>

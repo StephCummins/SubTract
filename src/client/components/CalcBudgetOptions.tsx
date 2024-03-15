@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Grid from '@mui/material/Grid';
+import type Chart from '../models/ChartInterface';
 import type Subscription from '../models/subscriptionInterface';
-
-interface Datasets {
-  data: number[];
-  backgroundColor: string[];
-}
-
-interface Chart {
-  labels: string[];
-  datasets: Datasets[];
-}
 
 const CalcBudgetOptions = ({ subs, budget, performance }): JSX.Element => {
   const emptyPieChart: Chart = {

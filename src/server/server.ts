@@ -2,8 +2,9 @@ import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import userRouter from './routes/userRouter';
+import openAIRouter from './routes/openAIRouter';
 import subsRouter from './routes/subsRouter';
+import userRouter from './routes/userRouter';
 
 const PORT = 3000;
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, '../../public')));
 
 app.use('/user', userRouter);
 app.use('/subs', subsRouter);
+app.use('/ai', openAIRouter);
 
 app.get('/', (req: Request, res: Response, next: NextFunction): void => {
   try {

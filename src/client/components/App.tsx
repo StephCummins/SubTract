@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import AddNewSubPage from './AddNewSubPage';
 import AccountPage from './AccountPage';
+import BudgetTipsPage from './BudgetTipsPage';
 import UpdateAvatarPage from './UpdateAvatarPage';
 import DashboardPage from './DashboardPage';
 import DeleteAccountPage from './DeleteAccountPage';
@@ -196,6 +197,12 @@ const App = (): JSX.Element => {
         <Route
           path="/viewperformance"
           element={<PerformancePage subs={subs} setShowMenu={setShowMenu} />}
+        />
+        <Route
+          path="/budgettips"
+          element={
+            <BudgetTipsPage user={user} subs={subs} setShowMenu={setShowMenu} />
+          }
         />
         <Route
           path="/account"

@@ -19,7 +19,7 @@ const theme: any = createTheme({
     fontFamily: 'Poppins, Open Sans, sans-serif',
     h1: {
       fontFamily: 'Bebas Neue, sans-serif',
-      fontSize: '3rem',
+      fontSize: '3.75rem',
       text: {
         color: 'primary'
       }

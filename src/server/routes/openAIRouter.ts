@@ -5,6 +5,7 @@ const openAIRouter: Router = express.Router();
 
 openAIRouter.post(
   '/startchatsession',
+  userController.authUserToken,
   openAIController.startChat,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.chatMessages);
@@ -13,6 +14,7 @@ openAIRouter.post(
 
 openAIRouter.post(
   '/askquestion',
+  userController.authUserToken,
   openAIController.askQuestion,
   (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).send(res.locals.chatMessages);
